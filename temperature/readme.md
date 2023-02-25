@@ -1,5 +1,3 @@
-### What?
-
 This sample code will take the temperature and show it on the LCD
 
 ### How do I run it?
