@@ -1,8 +1,14 @@
+### What?
+
 This sample code will take the temperature and show it on the LCD
 
-#How to Run:
+### How do I run it?
 
-`python3 temperature.py`
+Step 1: Clone the repo
 
-#[Datasheet](https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf) for temprature sensor:
+Step 2: Run `python3 temperature.py`
+
+### What Sensor are we using for to measure the temperature:
+
+[Datasheet](https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf) for temprature sensor:
 
