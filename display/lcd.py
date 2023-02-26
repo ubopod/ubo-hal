@@ -337,7 +337,20 @@ class LCD:
         self.logo_text_size = size
 
     def show_image(self, image):
-        self.lcd.image(image, 0, 0)
+        # self.lcd.image(image, 0, 0)
+        # Display image.
+        if (self.lcd_present == 0):
+            image.save(IMG_OUT)
+        else:
+            if self.version == 3:
+                self.lcd.image(image, 0, 0)
+            elif self.version == 2:
+                image = image.rotate(270)
+                self.lcd.image(image, 0, 0)
+            else:
+                disp.image(image)
+                disp.display()
+        
 
     def show_logo(self, x=0, y=0):
         if (self.lcd_present == 0):
@@ -432,7 +445,7 @@ class LCD:
         i = 0
         corner = None
         for item in options:
-            print(item)
+            # print(item)
             text = item["text"]
             color = item["color"]
             y = y + int(self.menu_row_y_size / 2) + self.menu_row_skip
@@ -455,7 +468,7 @@ class LCD:
     def progress_wheel(self, title, degree, color):
         """show progress circle/wheel"""
         base = Image.new("RGBA", (self.width, self.height), (0, 0, 0))
-        fnt = ImageFont.truetype(DIR + 'rubik/Rubik-Light.ttf', 30)
+        fnt = ImageFont.truetype(DIR + 'rubik/Rubik-Light.ttf', 28)
         txt = Image.new("RGBA", base.size, (255, 255, 255, 0))
         d = ImageDraw.Draw(txt)
         overlay = Image.new("RGBA", base.size, (255, 255, 255, 0))
@@ -486,7 +499,6 @@ class LCD:
         out.paste(overlay, (0, 0), overlay)
         out = out.rotate(0).convert('RGB')
         self.show_image(out)
-
 
     def indicate_buttons(self, title, color, buttons=None):
         if not buttons:

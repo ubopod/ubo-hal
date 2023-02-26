@@ -1,0 +1,6 @@
+row:[1] 	string:[	Line 1, Red         ]	type:[0]  color:[red]
+row:[2] 	string:[	Line 2, Green       ]	type:[0]  color:[green]
+row:[3] 	string:[	Line 3, Blue        ]	type:[0]  color:[blue]
+row:[4] 	string:[	Line 4, White       ]	type:[0]  color:[white]
+row:[5] 	string:[	Line 5, Yellow      ]	type:[0]  color:[(255, 255, 0)]
+row:[6] 	string:[	All Size 22         ]	type:[0]  color:[(0, 255, 255)]
