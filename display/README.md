@@ -77,8 +77,7 @@ Shows a circle with fill value in circular degrees (0-360). Useful for showing p
     lcd.progress_wheel(title="Downloading...", 
                         degree=120, 
                         color=(255,255,0)
-                    )  ]
-                     )
+                      )
 ```
 
 <img
