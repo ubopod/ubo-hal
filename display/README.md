@@ -59,7 +59,7 @@ options. The text and color can be customized.
                                 {"text": "No", 
                                 "color": "red"}
                                 ]
-                                )
+                     )
 ```
 
 <img
@@ -69,3 +69,20 @@ options. The text and color can be customized.
   style="display: inline-block; margin: 0 auto; max-width: 500px">
   
   
+ ### Progress Wheel
+
+Shows a circle with fill value in circular degrees (0-360). Useful for showing progess in your application.
+
+```
+    lcd.progress_wheel(title="Downloading...", 
+                        degree=120, 
+                        color=(255,255,0)
+                    )  ]
+                     )
+```
+
+<img
+  src="progress_wheel.png"
+  alt="Ubo LCD"
+  title="Lines on LCD "
+  style="display: inline-block; margin: 0 auto; max-width: 500px">
