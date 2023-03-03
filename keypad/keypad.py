@@ -4,12 +4,10 @@ import sys
 up_dir = os.path.dirname(os.path.abspath(__file__))+'/../'
 sys.path.append(up_dir)
 from display.lcd import LCD as LCD
-#from ubo_keypad import KEYPAD as KEYPAD
 from ubo_keypad import * # Might have to revisit this form of import
 
 #initialize LCD and Keypad
 lcd = LCD()
-#lcd.set_lcd_present(1)
 
 class mykeypad(KEYPAD):
     def __init__(self, *args, **kwargs):
@@ -33,42 +31,9 @@ class mykeypad(KEYPAD):
             buttonPressed = BUTTONS[index]
             print("Button pressed: " + BUTTONS[index])
   
-
             self.test_report[buttonPressed] = True
             lcd.display([(1,"You pressed the ",0,"green"), (2,buttonPressed,0,"blue"), (3,"button", 0,"green")], 20)
             time.sleep(2)
-
-            # if BUTTONS[index]=="0":
-            #     # update test result array
-            #     self.test_report["0"] = True
-            #     lcd.display([(1,"You pressed the ",0,"green"), (2,"0",0,"blue"), (3,"button", 0,"green")], 20)
-            #     time.sleep(2)
-            #     # display latest array
-            # if BUTTONS[index]=="1":
-            #     # update test result array
-            #     self.test_report["1"] = True
-            #     lcd.display([(1,"You pressed the ",0,"green"), (2,"1",0,"blue"), (3,"button", 0,"green")], 20)
-            #     time.sleep(2)
-            #     # display latest array
-            # if BUTTONS[index]=="2":
-            #     # update test result array
-            #     self.test_report["2"] = True
-            #     # display latest array
-            # if BUTTONS[index]=="up":
-            #     # update test result array
-            #     self.test_report["up"] = True
-            #     # display latest array
-            # if BUTTONS[index]=="down":
-            #     # update test result array
-            #     self.test_report["down"] = True
-            #     # display latest array
-            # if BUTTONS[index]=="back":
-            #     # update test result array
-            #     self.test_report["back"] = True
-            #     # display latest array
-            # if BUTTONS[index]=="home":
-                # update test result array
-                # self.test_report["home"] = True
 
             lcd.indicate_buttons("Press all", "green", buttons=self.test_report)
             self.test_result = (self.test_report["0"] and self.test_report["1"] and 
