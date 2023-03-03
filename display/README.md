@@ -12,6 +12,16 @@ Step 2: Run `python3 lcd_example.py`
 
 [Datasheet]() for LCD display
 
+## Display driver
+
+https://github.com/adafruit/Adafruit_CircuitPython_RGB_Display
+
+Display Type: adafruit_rgb_display.st7789
+```
+width=240
+height=240
+baudrate=16000000
+```
 ## LCD Class
 
 This section covers the display primitives:
