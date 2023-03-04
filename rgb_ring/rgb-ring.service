@@ -1,0 +1,18 @@
+[Unit]
+Description=Ubo LED Service
+Before=hardware-test.service
+
+[Service]
+User=root
+Environment=/home/pi/.local/lib/python3.9/site-packages/
+ExecStart=/usr/bin/python3 /home/pi/ubo-sdk/rgb_ring/rgb_ring_manager.py
+KillMode=control-group
+Restart=on-failure
+RestartPreventExitStatus=255
+Type=simple
+RuntimeDirectory=ubo/
+WorkingDirectory=/home/pi/ubo-sdk/
+RuntimeDirectoryMode=0755
+
+[Install]
+WantedBy=multi-user.target
