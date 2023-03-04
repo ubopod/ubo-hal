@@ -4,8 +4,7 @@ import board
 from lcd import LCD as LCD
 
 lcd = LCD()
-lcd.set_lcd_present(0)
-i2c = board.I2C()
+#lcd.set_lcd_present(1)
 
 def main():
 
