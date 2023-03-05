@@ -5,9 +5,24 @@ import board
 up_dir = os.path.dirname(os.path.abspath(__file__))+'/../'
 sys.path.append(up_dir)
 from display.lcd import LCD as LCD
+from time import sleep
 
 lcd = LCD()
 lcd.set_lcd_present(1)
+
+def displayTempText(temp_c, temp_f, c):
+    lcd.display([(1,"CPU Temp",0,"purple"),
+                 (2,"%.2f'C"%temp_c,0,c),
+                 (3,"%.2f'F"%temp_f,0,c)
+                ],
+                30
+               )
+
+def displayTempWheel(temp_c):
+    lcd.progress_wheel(title="Temperature %.2f'C"%temp_c,
+                       degree=temp_c * 4,
+                       color=(0,255,0)
+                      )
 
 def main():
 
@@ -21,9 +36,10 @@ def main():
     elif temp_c > 50 :
         c = "yellow"
 
-    lcd.display([(1,"CPU Temp",0,"white"), \
-(2,"%.2f'C"%temp_c,0,c), \
-(3,"%.2f'F"%temp_f,0,c),], 30)
+    displayTempWheel(temp_c)
+    sleep(2)
+    displayTempText(temp_c, temp_f, c)
+
 
 if __name__ == '__main__':
     try:
