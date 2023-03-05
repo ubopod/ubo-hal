@@ -10,7 +10,7 @@ This repo includes code for communicating and interfacing with Ubo hardware peri
 
 
 ```
-sudo cp /rgb-ring.service /etc/systemd/system/
+sudo cp rgb-ring.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable rgb-ring
 sudo systemctl restart rgb-ring
