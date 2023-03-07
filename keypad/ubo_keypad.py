@@ -59,6 +59,7 @@ class KEYPAD(object):
         self.enabled = True
         self.BUTTONS = ["0", "1", "2", "up", "down", "back", "home", "mic"]
         self.index = 0
+        self.buttonPressed = self.BUTTONS[self.index]
 
         
     def init_i2c(self):
@@ -144,15 +145,20 @@ class KEYPAD(object):
         # switch state change
         if inputs == 0:
             print("no keypad change")
-            self.index = 7
             if ((self.last_inputs & 0x80) == 0) and \
                 (self.mic_switch_status == True):
                 print("Mic Switch is now OFF")
+                self.index = 7
+                self.buttonPressed = self.BUTTONS[self.index]
                 self.mic_switch_status = False
+                self.button_event()
             if ((self.last_inputs & 0x80) == 128) and \
                 (self.mic_switch_status == False):
                 print("Mic Switch is now ON")
+                self.index = 7
+                self.buttonPressed = self.BUTTONS[self.index]
                 self.mic_switch_status = True
+                self.button_event()
             return
         if inputs < 1:
             self.index = 500 #invalid index
@@ -160,6 +166,7 @@ class KEYPAD(object):
         self.index = (int)(math.log2(inputs))
         print("index is " + str(self.index))
         if inputs > -1:
+            self.buttonPressed = self.BUTTONS[self.index]
             self.button_event()
             if self.BUTTONS[self.index] == "up":
                 print("Key up on " + str(self.index))

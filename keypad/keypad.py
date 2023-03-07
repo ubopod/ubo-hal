@@ -16,9 +16,9 @@ class mykeypad(KEYPAD):
         self.test_report = {"0":False, "1":False, "2":False, "up":False, "down":False, "back":False, "home":False, "mic": True}
 
     def button_event(self):
-        buttonPressed = self.BUTTONS[self.index]
-        self.test_report[buttonPressed] = True
-        lcd.display([(1,"You pressed the",0,"green"), (2,buttonPressed,0,"blue"), (3,"button", 0,"green")], 19)
+        print(self.buttonPressed)
+        self.test_report[self.buttonPressed] = True
+        lcd.display([(1,"You pressed the",0,"green"), (2,self.buttonPressed,0,"blue"), (3,"button", 0,"green")], 19)
         time.sleep(2)
         lcd.indicate_buttons("Press all", "green", buttons=self.test_report)
         self.test_result = (self.test_report["0"] and self.test_report["1"] and 
