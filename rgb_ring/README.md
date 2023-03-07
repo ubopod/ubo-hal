@@ -15,11 +15,12 @@ read the incoming messages at that socket and displays the communicated pattern.
 
 
 ```
-sudo cp /rgb-ring.service /etc/systemd/system/
+sudo cp rgb-ring.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable rgb-ring
 sudo systemctl restart rgb-ring
 ```
+
 
 The install script (`/setup/install.sh`) automically adds the rgb-ring service
 
@@ -42,5 +43,4 @@ Fill Up to
 Fill Down to
 
 5) add rgb_ring_example.py
-
 
