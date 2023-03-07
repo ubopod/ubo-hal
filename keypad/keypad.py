@@ -12,35 +12,19 @@ lcd = LCD()
 class mykeypad(KEYPAD):
     def __init__(self, *args, **kwargs):
         super(mykeypad, self).__init__(*args, **kwargs)
-        self.state_index = 0
-        self.repeat_counter = 0
         self.test_result  = False
         self.test_report = {"0":False, "1":False, "2":False, "up":False, "down":False, "back":False, "home":False, "mic": True}
 
-    def key_press_cb(self, channel):
-        #read inputs
-   
-        inputs = self.aw.inputs
-        print("Inputs: {:016b}".format(inputs))
-        inputs = 127 - inputs & 0x7F
-        if inputs < 1:
-            return
-        index = (int)(math.log2(inputs))
-        print("index is " + str(index))
-        if inputs > -1:
-            buttonPressed = BUTTONS[index]
-            print("Button pressed: " + BUTTONS[index])
-  
-            self.test_report[buttonPressed] = True
-            lcd.display([(1,"You pressed the ",0,"green"), (2,buttonPressed,0,"blue"), (3,"button", 0,"green")], 20)
-            time.sleep(2)
-
-            lcd.indicate_buttons("Press all", "green", buttons=self.test_report)
-            self.test_result = (self.test_report["0"] and self.test_report["1"] and 
-                                self.test_report["2"] and self.test_report["up"] and 
-                                self.test_report["down"] and self.test_report["home"] and 
-                                self.test_report["back"])
-            
+    def button_event(self):
+        buttonPressed = self.BUTTONS[self.index]
+        self.test_report[buttonPressed] = True
+        lcd.display([(1,"You pressed the",0,"green"), (2,buttonPressed,0,"blue"), (3,"button", 0,"green")], 19)
+        time.sleep(2)
+        lcd.indicate_buttons("Press all", "green", buttons=self.test_report)
+        self.test_result = (self.test_report["0"] and self.test_report["1"] and 
+                            self.test_report["2"] and self.test_report["up"] and 
+                            self.test_report["down"] and self.test_report["home"] and 
+                            self.test_report["back"])
 
 def main():
     lcd.display([(1,"Starting",0,"white"), (2,"Keypad",0,"white"), (3,"Test", 0,"white")], 25)

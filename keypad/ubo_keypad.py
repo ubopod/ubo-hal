@@ -28,7 +28,7 @@ STATUS_FILE = './info/status.ini'
 # logging.config.fileConfig(LOG_CONFIG,
 #                           disable_existing_loggers=False)
 INT_EXPANDER = 5
-BUTTONS = ["0", "1", "2", "up", "down", "back", "home", "mic"]
+# BUTTONS = ["0", "1", "2", "up", "down", "back", "home", "mic"]
 
 
 class KEYPAD(object):
@@ -49,7 +49,7 @@ class KEYPAD(object):
         #    self.enabled = False
         #    return
         #else:
-        print("new keypad")
+        print("Initialising keypad...")
         self.aw = None
         self.mic_switch_status = False
         self.last_inputs = None
@@ -57,6 +57,8 @@ class KEYPAD(object):
         self.model = "aw9523"
         self.init_i2c()
         self.enabled = True
+        self.BUTTONS = ["0", "1", "2", "up", "down", "back", "home", "mic"]
+        self.index = 0
 
         
     def init_i2c(self):
@@ -89,43 +91,43 @@ class KEYPAD(object):
         buffer[1] = 0x00
         new_i2c.write(buffer)
         new_i2c.write_then_readinto(buffer, buffer, out_end=1, in_start=1)
-        print(buffer)
+        #print(buffer)
         time.sleep(0.1)
         buffer[0] = 0x01
         buffer[1] = 0x00
         new_i2c.write(buffer)
         new_i2c.write_then_readinto(buffer, buffer, out_end=1, in_start=1)
-        print(buffer)
+        #print(buffer)
         # disable interrupt for higher bits
         buffer[0] = 0x06
         buffer[1] = 0x00
         new_i2c.write(buffer)
         new_i2c.write_then_readinto(buffer, buffer, out_end=1, in_start=1)
-        print(buffer)
+        #print(buffer)
         buffer[0] = 0x07
         buffer[1] = 0xff
         new_i2c.write(buffer)
         new_i2c.write_then_readinto(buffer, buffer, out_end=1, in_start=1)
-        print(buffer)
+        #print(buffer)
         # read registers again to reset interrupt
         buffer[0] = 0x00
         buffer[1] = 0x00
         new_i2c.write(buffer)
         new_i2c.write_then_readinto(buffer, buffer, out_end=1, in_start=1)
-        print(buffer)
+        #print(buffer)
         time.sleep(0.1)
         buffer[0] = 0x01
         buffer[1] = 0x00
         new_i2c.write(buffer)
         new_i2c.write_then_readinto(buffer, buffer, out_end=1, in_start=1)
-        print(buffer)
+        #print(buffer)
         time.sleep(0.1)
         # _inputs = self.aw.inputs
         # print("Inputs: {:016b}".format(_inputs))
         for i in range(1):
             self.last_inputs = self.aw.inputs
             print("Inputs: {:016b}".format(self.last_inputs))
-            print(self.last_inputs & 0x80)
+            # print(self.last_inputs & 0x80)
             self.mic_switch_status = ((self.last_inputs & 0x80) == 128)
             print("mic switch is " + str(self.mic_switch_status))
             time.sleep(0.5)
@@ -142,6 +144,7 @@ class KEYPAD(object):
         # switch state change
         if inputs == 0:
             print("no keypad change")
+            self.index = 7
             if ((self.last_inputs & 0x80) == 0) and \
                 (self.mic_switch_status == True):
                 print("Mic Switch is now OFF")
@@ -151,21 +154,24 @@ class KEYPAD(object):
                 print("Mic Switch is now ON")
                 self.mic_switch_status = True
             return
-        index = (int)(math.log2(inputs))
-        print("index is " + str(index))
+        if inputs < 1:
+            self.index = 500 #invalid index
+            return
+        self.index = (int)(math.log2(inputs))
+        print("index is " + str(self.index))
         if inputs > -1:
-            print
-            if BUTTONS[index] == "up":
-                print("Key up on " + str(index))
-            if BUTTONS[index] == "down":
-                print("Key down on " + str(index))
-            if BUTTONS[index] == "back":
-                print("Key back on " + str(index))
-            if BUTTONS[index] in ["1", "2", "0"]:
-                print("Key side =" + BUTTONS[index])
-            if BUTTONS[index] == "home":
-                print("Key home on " + str(index))
-            return BUTTONS[index]
+            self.button_event()
+            if self.BUTTONS[self.index] == "up":
+                print("Key up on " + str(self.index))
+            if self.BUTTONS[self.index] == "down":
+                print("Key down on " + str(self.index))
+            if self.BUTTONS[self.index] == "back":
+                print("Key back on " + str(self.index))
+            if self.BUTTONS[self.index] in ["1", "2", "0"]:
+                print("Key side =" + str(self.index))
+            if self.BUTTONS[self.index] == "home":
+                print("Key home on " + str(self.index))
+            return self.BUTTONS[self.index]
 
     def get_mic_switch_status(self):
         inputs = self.aw.inputs
@@ -173,6 +179,9 @@ class KEYPAD(object):
         # microphone switch is connected to bit 8th
         # of the GPIO expander
         return ((inputs & 0x80) == 128)
+    
+    def button_event(self):
+        pass 
 
 
 
