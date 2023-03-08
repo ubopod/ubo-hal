@@ -40,7 +40,8 @@ def main():
     else:
         # continue with test
         lcd.indicate_buttons("Press all", "green", keypad.test_result)
-        while (not keypad.test_result): # check state machine state 
+        # loop until all keypad buttons are pressed
+        while (not keypad.test_result): 
             time.sleep(1)
 
 
