@@ -19,13 +19,13 @@ LM_SOCKET_PATH = SDK_HOME_PATH + "ledmanagersocket.sock"
 # Some NeoPixels have red and green reversed!
 # For RGBW NeoPixels, simply change the ORDER to RGBW or GRBW.
 ORDER = neopixel.GRB
-CONFIG_FILE = SDK_HOME_PATH + "config/config.ini"
+CONFIG_FILE = SDK_HOME_PATH + "system/config/config.ini"
 try:
     from self.configparser import configparser
 except ImportError:
     import configparser
 
-LOG_CONFIG = SDK_HOME_PATH + "log/logging-debug.ini"
+LOG_CONFIG = SDK_HOME_PATH + "system/log/logging-debug.ini"
 logging.config.fileConfig(LOG_CONFIG,
                           disable_existing_loggers=False)
 

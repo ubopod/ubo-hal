@@ -13,12 +13,11 @@ applications send messages to it via writing to a socket. The manager constantly
 read the incoming messages at that socket and displays the communicated pattern.
 
 
-
 ```
 sudo cp rgb-ring.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable rgb-ring
 sudo systemctl restart rgb-ring
+sudo systemctl enable rgb-ring
 ```
 
 
