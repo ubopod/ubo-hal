@@ -1,7 +1,7 @@
 # RGB Ring
 This repo includes code for interfacing with Ubo RGB LED Ring.
 
-# Client/Manager Model
+## Client/Manager Model
 The RGB Ring is controlled and managed by `rgb_ring_manager.py`. The manager 
 runs as a system service with root privilege. Since the ring manager service uses 
 [Neopixel](https://learn.adafruit.com/neopixels-on-raspberry-pi/python-usage) 
@@ -37,7 +37,7 @@ You can run the above line by:
 
 `sudo bash system/setup/start_services.sh`
 
-# Permission model
+## Permission model
 
 Only applications that belong to the user group that have write permission to the 
 file socket can send patterns to led ring manager. Only user with root privilege
@@ -47,7 +47,7 @@ can add a user to that group. Currently, `pi` group has write permission to the 
 We are improving permission managment currently. (TODO)
 
 
-# Built-in RGB ring display patterns and primitives
+## Built-in RGB ring display patterns and primitives
 
 To show patterns on the RGB LED ring, you must first import LEDClient class:
 
@@ -105,5 +105,7 @@ lc.spinning_wheel(color = (255,255,255),
 
 ```
 
-5) add rgb_ring_example.py
+# 
+
+rgb_ring_example.py
 
