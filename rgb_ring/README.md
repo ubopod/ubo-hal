@@ -59,51 +59,64 @@ then instantiate a new client object:
 
 To enable or disable the client, run:
 
-`lc.set_enabled(True) #False`
+`LEDClient.set_enabled(True) #False`
 
+
+To sets all LEDs to the specified color:
+
+`LEDClient.set_all(color=(255, 255, 255))`
+
+To turn off all LEDs:
+
+`LEDClient.blank()`
+
+To set brightness to a specific level 
+between 0 and 1 where 0 means darkness 
+and 1 mmeans maxumum brightness:
+
+`lc.set_brightness(0.5)`
+
+Fill up the ring from the first LED 
+up to the specific LED index
 
 ```
-# sets all LEDs to the specified color
-lc.set_all(color=(255, 255, 255))
-
-
-lc.blank()
-
-lc.set_brightness(0.5)
-
 lc.fill_upto(color = (255,255,255), 
             percentage = 0.5,
             wait = 100)
+```
+Fill up the ring from the first LED 
+up to the specific LED index
 
+```
 lc.fill_downfrom(color = (255,255,255), 
             percentage = 0.5,
             wait = 100)
-
+```
 
 Glows the LEDs in a rainbow pattern
 percentage: is a float between 0 and 1
 wait: is in milliseconds
 
-lc.rainbow(rounds=10, wait=5)
+`lc.rainbow(rounds=10, wait=5)`
 
-# increments the position of bright strip by one step.
-lc.progress_wheel_step(color=(0, 255, 0))
+increments the position of bright strip by one step.
 
+`lc.progress_wheel_step(color=(0, 255, 0))`
 
+```
 lc.pulse(color = (255,0,255), 
         wait = 50, #in miliseconds
         repetitions = 5)
+```
 
 # Spinning wheel 
 # length = 10 leds
+```
 lc.spinning_wheel(color = (255,255,255), 
                 wait = 20, #miliseconds
                 length = 10, #leds
                 repetitions = 3)
-    
-
-
-```
+```    
 
 # 
 
