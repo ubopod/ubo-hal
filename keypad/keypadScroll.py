@@ -32,13 +32,11 @@ class mykeypad(KEYPAD):
         if self.buttonPressed == "up":
             if self.listIndex > 0:
                 self.listIndex -= 1
-        if self.buttonPressed == "down":
-            
+        if self.buttonPressed == "down":        
             if self.listIndex < 5:
                 self.listIndex += 1
             
-        #lcd.display([(1,"You pressed the",0,"green"), (2,self.buttonPressed,0,"blue"), (3,"button", 0,"green")], 19)
-        print(self.listIndex)
+        #print(self.listIndex)
         displayItems(self.listIndex)
 
 
@@ -88,10 +86,6 @@ def displayItems(i):
         lcd.show_menu(title="scroll", menu_items=[items[i][0],
                                                   items[i+1][0],
                                                   items[i+2][0]])
-        # lcd.display([(1,items[index][0], 0,"white"), 
-        #          (2,items[index + 1][0] ,0,"white"), 
-        #          (3,items[index + 2][0], 0,"white")],
-        #         50)
 
 def main():
 
