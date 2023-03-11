@@ -33,11 +33,12 @@ class mykeypad(KEYPAD):
             if self.listIndex > 0:
                 self.listIndex -= 1
         if self.buttonPressed == "down":
-            print(self.listIndex)
-            if self.listIndex < 6:
+            
+            if self.listIndex < 5:
                 self.listIndex += 1
             
         #lcd.display([(1,"You pressed the",0,"green"), (2,self.buttonPressed,0,"blue"), (3,"button", 0,"green")], 19)
+        print(self.listIndex)
         displayItems(self.listIndex)
 
 
@@ -66,11 +67,11 @@ def action6():
     print(item + " was pressed")
 
 def action7():
-    item = "Item6"
+    item = "Item7"
     print(item + " was pressed")
 
 def action8():
-    item = "Item6"
+    item = "Item8"
     print(item + " was pressed")
 
 
