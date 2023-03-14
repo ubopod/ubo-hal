@@ -1,16 +1,14 @@
+# Keypad document
 
+## Project Title
 
+## Description
 
+## Prerequisites
 
-##Project Title
+## Installation
 
-##Description
-
-##Prerequisites
-
-##Installation
-
-##Usage
+## Usage
 Here is some sample code that lets you interact with the keypad
 
 There are 3 files.
@@ -27,11 +25,11 @@ Step 1: Clone the repo
 
 Step 2: Run `python3 keypad3.py`
 
-##Contributing
+## Contributing
 
-##Authors
+## Authors
 
-##License
+## License
 
 ##Acknowledgments
 
