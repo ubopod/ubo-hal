@@ -1,3 +1,12 @@
+#!/usr/bin/python3
+__author__ = "Authon Name"
+__copyright__ = "Copyright 2023, The UBO Project"
+__credits__ = ["names oof the contributor"]
+__license__ = "GPL"
+__version__ = "0.0.1"
+__maintainer__ = "Maintainer Name"
+__email__ = 'email address'
+__status__ = "Current Status Prototype or Production"
 # ==================================================
 # UBO SDK:
 #          ubo_keypad.py
@@ -474,4 +483,4 @@ if __name__ == '__main__':
             sys.exit(0)
         except SystemExit:
             os._exit(0)
-            os.
+
