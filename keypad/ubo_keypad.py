@@ -7,19 +7,16 @@
 import RPi.GPIO as GPIO
 from adafruit_bus_device import i2c_device
 import adafruit_aw9523
-from PIL import Image, ImageDraw, ImageFont
 import logging.config
 import board
 import math
 import time
-import signal
 import os
 import sys
 import platform
 import logging
 import logging.config
 import logging.handlers
-from logging.config import dictConfig
 from datetime import datetime
 import argparse
 
@@ -47,11 +44,17 @@ INT_EXPANDER = 5
 
 class KEYPAD(object):
     """
-    KEYPAD Constructor
+    KEYPAD class
 
     """
 
     def __init__(self):
+        """
+        KEYPAD Constructor.
+        This assumes that the logging mechanism has been
+        correctly initialized and functional
+        aw925 GPIO extender need to be available
+        """
         logger = logging.getLogger(__name__)
         # self.config = configparser.ConfigParser()
         # self.config.read(CONFIG_FILE)
@@ -78,8 +81,11 @@ class KEYPAD(object):
 
     def init_i2c(self):
         """
-        Intialize the I2C via the GPIO Extender
+        Initializes the I2C via the GPIO Extender
+        Detailed info about the GPIO header and pins
+        can be found here https://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/
         """
+        # Use GPIO numbers not pin numbers
         GPIO.setmode(GPIO.BCM)
         i2c = board.I2C()
 
@@ -95,18 +101,20 @@ class KEYPAD(object):
             self.aw = adafruit_aw9523.AW9523(i2c, 0x58)
             new_i2c = i2c_device.I2CDevice(i2c, 0x58)
             self.bus_address = "0x58"
-        except:
+        except ValueError as e:
+            print(e)
             try:
                 self.aw = adafruit_aw9523.AW9523(i2c, 0x5b)
                 new_i2c = i2c_device.I2CDevice(i2c, 0x5b)
                 self.bus_address = "0x5b"
-            except:
+            except ValueError as e:
+                print(e)
                 # Test this scenario
                 self.bus_address = False
                 print("Failed to initialized I2C Bus")
                 return
 
-        # Perform reset of the Expender 
+        # Perform reset of the expander
         self.aw.reset()
         print("Inputs: {:016b}".format(self.aw.inputs))
 
@@ -188,7 +196,7 @@ class KEYPAD(object):
         if inputs == 0:
             # print("no keypad change")
             if ((self.last_inputs & 0x80) == 0) and \
-                    (self.mic_switch_status == True):
+                    (self.mic_switch_status is True):
                 print("Mic Switch is now OFF")
                 self.index = 7
                 self.buttonPressed = self.BUTTONS[self.index]
@@ -208,7 +216,7 @@ class KEYPAD(object):
             self.index = 500  # invalid index
             return
 
-        self.index = (int)(math.log2(inputs))
+        self.index = int(math.log2(inputs))
         print("index is " + str(self.index))
 
         if inputs > -1:
@@ -241,7 +249,7 @@ class KEYPAD(object):
 
         # microphone switch is connected to bit 8th
         # of the GPIO expander
-        return ((inputs & 0x80) == 128)
+        return 128 == (inputs & 0x80)
 
     def button_event(self):
         """
@@ -466,3 +474,4 @@ if __name__ == '__main__':
             sys.exit(0)
         except SystemExit:
             os._exit(0)
+            os.
