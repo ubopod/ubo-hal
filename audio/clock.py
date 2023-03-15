@@ -5,7 +5,12 @@
 #   pip3 install pyttsx3
 
 
-import pyttsx3
+try:
+    import pyttsx3
+except:
+    print("ERROR: is pyttsx3 installed?\nUse 'pip3 install pyttsx3'")
+    exit(1)
+
 from datetime import datetime
 
 s = pyttsx3.init()
