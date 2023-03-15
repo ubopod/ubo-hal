@@ -40,6 +40,9 @@ time = str(now).split(":")
 # Play the recorded audio file for hour
 #os.system("aplay -D plughw:CARD=seeed2micvoicec,DEV=0 -c 1 -f S16_LE " + str(int(time[0])) + ".wav")
 
+if int(time[0]) > 12:
+    time[0] = str(int(time[0]) - 12)
+
 hour = AudioSegment.from_wav(str(int(time[0])) + ".wav")
 play(hour)
 
