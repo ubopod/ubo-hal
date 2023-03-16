@@ -15,6 +15,6 @@ else:
 for x in range(1,13):
     os.system("aplay -D plughw:CARD=seeed2micvoicec,DEV=0 -c 1 -f S16_LE beep.wav")
     os.system("arecord -D plughw:CARD=seeed2micvoicec,DEV=0 --duration=1 --file-type=wav \
-               --format=S16_LE  --rate=16000 --channels=2 " + str(x) + ".wav" \
+               --format=S16_LE  --rate=16000 --channels=2 " + "wav/" + str(x) + ".wav" \
              )
 
