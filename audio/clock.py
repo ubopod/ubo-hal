@@ -37,18 +37,18 @@ print(now)
 
 time = str(now).split(":")
 
-# Play the recorded audio file for hour
-os.system("aplay -D plughw:CARD=seeed2micvoicec,DEV=0 -c 1 -f S16_LE " + str(int(time[0])) + ".wav")
-
+# Converts 24 hour to 12 hour
 if int(time[0]) > 12:
     time[0] = str(int(time[0]) - 12)
 
+# Chimes for each hour
+#for x in range(int(time[0])):
+#    os.system("aplay -D plughw:CARD=seeed2micvoicec,DEV=0 -c 1 -f S16_LE beep.wav")
 
-for x in range(int(time[0])):
-    os.system("aplay -D plughw:CARD=seeed2micvoicec,DEV=0 -c 1 -f S16_LE beep.wav")
+# Play the recorded audio file for hour using aplay
+#os.system("aplay -D plughw:CARD=seeed2micvoicec,DEV=0 -c 1 -f S16_LE " + str(int(time[0])) + ".wav")
 
-
-
+# Use pydub to play audio
 hour = AudioSegment.from_wav(str(int(time[0])) + ".wav")
 play(hour)
 
