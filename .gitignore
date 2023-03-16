@@ -165,7 +165,7 @@ cython_debug/
 
 keypad/Logs/ubo*/cycle 
 
-
+docs/html/
 # Project specific ignores
 system/setup/hats
 system/setup/seeed-voicecard/
