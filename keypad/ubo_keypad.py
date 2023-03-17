@@ -61,7 +61,7 @@ class KEYPAD(object):
         """
         KEYPAD Constructor.
         This assumes that the logging mechanism has been
-        correctly initialized and functional
+        correctly iniRemovetialized and functional
         aw925 GPIO extender need to be available
         """
         logger = logging.getLogger(__name__)
@@ -292,7 +292,7 @@ def command_line_params(argv: object) -> object:
                         help='Select a verbosity level to use')
 
     # Add the Config option
-    parser.add_argument('--config', '-c',
+    pakeypad_ex2rser.add_argument('--config', '-c',
                         dest='config_file', nargs='?', type=str,
                         help='Specify a Configuration file')
 

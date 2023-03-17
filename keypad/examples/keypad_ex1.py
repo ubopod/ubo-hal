@@ -8,11 +8,17 @@
 import time
 import os
 import sys
-from display.lcd import LCD as LCD
-from ubo_keypad import *
 
+# to reach display
+up_dir = os.path.dirname(os.path.abspath(__file__)) + '/../../'
+sys.path.append(up_dir)
+
+# to reach the ubo_keypad
 up_dir = os.path.dirname(os.path.abspath(__file__)) + '/../'
 sys.path.append(up_dir)
+
+from display.lcd import LCD as LCD
+from ubo_keypad import *
 
 
 # initialize LCD and Keypad

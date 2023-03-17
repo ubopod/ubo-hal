@@ -1,8 +1,20 @@
-from display.lcd import LCD as LCD
-from ubo_keypad import *
+import os
+import sys
+import time
 
+from PIL.Image import Image
+from PIL.ImageDraw import ImageDraw
+
+# to reach display
+up_dir = os.path.dirname(os.path.abspath(__file__)) + '/../../'
+sys.path.append(up_dir)
+
+# to reach the ubo_keypad
 up_dir = os.path.dirname(os.path.abspath(__file__)) + '/../'
 sys.path.append(up_dir)
+
+from display.lcd import LCD as LCD
+from ubo_keypad import *
 
 result = True
 # initialize LCD and Keypad
@@ -21,81 +33,84 @@ class StateMachine(KEYPAD):
     def button_event(self):
         b = self.buttonPressed
         # read inputs
-            if self.state_index == 0:
-                if self.buttonPressed == "1":  # YES
-                    self.test_report["qrcode"] = True  # record test result
-                    self.state_index = 1  # move to next state
+        if self.state_index == 0:
+            if self.buttonPressed == "1":  # YES
+                self.test_report["qrcode"] = True  # record test result
+                self.state_index = 1  # move to next state
+                self.repeat_counter = 0  # reset repeat counter
+                self.show_color_and_prompt("red")  # show next screen
+            if self.buttonPressed == "2":  # RETRY
+                # show QR code for 5 seconds then prompt
+                # increment counter
+                self.repeat_counter += 1
+                if self.repeat_counter > self.num_retries:
+                    self.test_report["qrcode"] = False
+                    # move to next test/state
+                    self.state_index = 1
+                    self.repeat_counter = 0
+                    self.show_color_and_prompt("red")
+                else:
+                    self.show_color_and_prompt("qrcode")
+
+        elif self.state_index == 1:
+            if self.buttonPressed == "1":  # YES
+                self.test_report["red"] = True  # record test result
+                self.state_index = 2  # move to next state
+                self.repeat_counter = 0  # reset repeat counter
+                self.show_color_and_prompt("green")  # show next screen
+            if self.buttonPressed == "2":  # RETRY
+                # increment counter
+                self.repeat_counter += 1
+                if self.repeat_counter > self.num_retries:
+                    self.test_report["red"] = False
+                    # move to next test/state
+                    self.state_index = 2
+                    self.repeat_counter = 0
+                    self.show_color_and_prompt("green")
+                else:
+                    self.show_color_and_prompt("red")
+
+        elif self.state_index == 2:
+            print("state = " + str(self.state_index))
+            if self.buttonPressed == "1":  # YES
+                self.test_report["green"] = True  # record test result
+                self.state_index = 3  # move to next state
+                self.repeat_counter = 0  # reset repeat counter
+                self.show_color_and_prompt("blue")  # show next screen
+            if self.buttonPressed == "2":  # RETRY
+                # increment counter
+                self.repeat_counter += 1
+                if self.repeat_counter > self.num_retries:
+                    self.test_report["green"] = False
+                    # move to next test/state
+                    self.state_index = 3
                     self.repeat_counter = 0  # reset repeat counter
-                    self.show_color_and_prompt("red")  # show next screen
-                if BUTTONS[index] == "2":  # RETRY
-                    # show QR code for 5 seconds then promot
-                    # increment counter
-                    self.repeat_counter += 1
-                    if (self.repeat_counter > self.num_retries):
-                        self.test_report["qrcode"] = False
-                        # move to next test/state
-                        self.state_index = 1
-                        self.repeat_counter = 0
-                        self.show_color_and_prompt("red")
-                    else:
-                        self.show_color_and_prompt("qrcode")
-            elif self.state_index == 1:
-                if BUTTONS[index] == "1":  # YES
-                    self.test_report["red"] = True  # record test result
-                    self.state_index = 2  # move to next state
-                    self.repeat_counter = 0  # reset repeat counter
-                    self.show_color_and_prompt("green")  # show next screen
-                if BUTTONS[index] == "2":  # RETRY
-                    # increment counter
-                    self.repeat_counter += 1
-                    if (self.repeat_counter > self.num_retries):
-                        self.test_report["red"] = False
-                        # move to next test/state
-                        self.state_index = 2
-                        self.repeat_counter = 0
-                        self.show_color_and_prompt("green")
-                    else:
-                        self.show_color_and_prompt("red")
-            elif self.state_index == 2:
-                print("state = " + str(self.state_index))
-                if BUTTONS[index] == "1":  # YES
-                    self.test_report["green"] = True  # record test result
-                    self.state_index = 3  # move to next state
-                    self.repeat_counter = 0  # reset repeat counter
-                    self.show_color_and_prompt("blue")  # show next screen
-                if BUTTONS[index] == "2":  # RETRY
-                    # increment counter
-                    self.repeat_counter += 1
-                    if (self.repeat_counter > self.num_retries):
-                        self.test_report["green"] = False
-                        # move to next test/state
-                        self.state_index = 3
-                        self.repeat_counter = 0  # reset repeat counter
-                        self.show_color_and_prompt("blue")
-                    else:
-                        self.show_color_and_prompt("green")
-            elif self.state_index == 3:
-                if BUTTONS[index] == "1":  # YES
-                    self.test_report["blue"] = True  # record test result
-                    # go to final state
-                    self.state_index = 4  # move to next state
-                    self.repeat_counter = 0  # reset repeat counter
-                if BUTTONS[index] == "2":  # RETRY
-                    # increment counter
-                    self.repeat_counter += 1
-                    if (self.repeat_counter > self.num_retries):
-                        self.test_report["blue"] = False
-                        # move to next test/state
-                        self.repeat_counter = 0
-                        self.state_index = 4
-                    else:
-                        self.show_color_and_prompt("blue")
+                    self.show_color_and_prompt("blue")
+                else:
+                    self.show_color_and_prompt("green")
+
+        elif self.state_index == 3:
+            if self.buttonPressed == "1":  # YES
+                self.test_report["blue"] = True  # record test result
+                # go to final state
+                self.state_index = 4  # move to next state
+                self.repeat_counter = 0  # reset repeat counter
+            if self.buttonPressed == "2":  # RETRY
+                # increment counter
+                self.repeat_counter += 1
+                if self.repeat_counter > self.num_retries:
+                    self.test_report["blue"] = False
+                    # move to next test/state
+                    self.repeat_counter = 0
+                    self.state_index = 4
+                else:
+                    self.show_color_and_prompt("blue")
             if self.state_index == 4:
                 # show test result
-                if (self.test_report["qrcode"] and \
+                if self.test_report["qrcode"] and \
                         self.test_report["blue"] and \
                         self.test_report["green"] and \
-                        self.test_report["red"]):
+                        self.test_report["red"]:
                     # Display Test Result on LCD
                     lcd.display([(1, "LCD Test", 0, "white"), (2, "Result:", 0, "white"), (3, "Passed", 0, "green"),
                                  (4, chr(56), 1, "green")], 30)
