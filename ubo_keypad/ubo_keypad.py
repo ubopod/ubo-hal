@@ -61,7 +61,7 @@ class KEYPAD(object):
         self.index = 0
         self.buttonPressed = self.BUTTONS[self.index]
 
-        
+
     def init_i2c(self):
         GPIO.setmode(GPIO.BCM)
         i2c = board.I2C()
@@ -186,9 +186,9 @@ class KEYPAD(object):
         # microphone switch is connected to bit 8th
         # of the GPIO expander
         return ((inputs & 0x80) == 128)
-    
+
     def button_event(self):
-        pass 
+        pass
 
 
 

@@ -4,7 +4,7 @@ try:
     import board
     import digitalio
     import adafruit_rgb_display.st7789 as st7789  # pylint: disable=unused-import
-    import Adafruit_SSD1306
+    #import Adafruit_SSD1306
 except Exception as err:
     print("Possibly unsupported board: " + str(err))
 
@@ -12,7 +12,7 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 import logging.config
-import qrcode
+#import qrcode
 import time
 import textwrap
 import os
@@ -184,19 +184,8 @@ class LCD:
             x_offset = 20
             image = Image.new("RGB", (width, height), "BLACK")
         else:
-            # Note you can change the I2C address by passing an i2c_address parameter like:
-            disp = Adafruit_SSD1306.SSD1306_128_64(
-                rst=self.RST, i2c_address=0x3C)
-            # Initialize library.
-            disp.begin()
-            # Clear display.
-            disp.clear()
-            disp.display()
-            # Make sure to create image with mode '1' for 1-bit color.
-            width = disp.width
-            height = disp.height
-            x_offset = 0
-            image = Image.new('1', (width, height))
+            print("Unsupported Hardware version!")
+            exit(1)
 
         # Get drawing object to draw on image.
         draw = ImageDraw.Draw(image)
@@ -269,26 +258,11 @@ class LCD:
         # Move left to right keeping track of the current x position for drawing shapes.
         x_pad = padding
 
-        if self.version == 2 or self.version == 3:
-            width = self.width
-            height = self.height
-            pixel_size = int(size * 0.5)
-            x_offset = 15
-            image = Image.new("RGB", (width, height), "BLACK")
-        else:
-            # Note you can change the I2C address by passing an i2c_address parameter like:
-            disp = Adafruit_SSD1306.SSD1306_128_64(
-                rst=self.RST, i2c_address=0x3C)
-            # Initialize library.
-            disp.begin()
-            # Clear display.
-            disp.clear()
-            disp.display()
-            # Make sure to create image with mode '1' for 1-bit color.
-            width = disp.width
-            height = disp.height
-            x_offset = 0
-            image = Image.new('1', (width, height))
+        width = self.width
+        height = self.height
+        pixel_size = int(size * 0.5)
+        x_offset = 15
+        image = Image.new("RGB", (width, height), "BLACK")
 
         # Get drawing object to draw on image.
         draw = ImageDraw.Draw(image)
@@ -372,16 +346,9 @@ class LCD:
                 image = image.rotate(270)
             self.lcd.image(image, x, y)
         else:
-            img = DIR + 'ubo_128_64.png'
-            image = Image.open(img).convert('1')
-            disp = Adafruit_SSD1306.SSD1306_128_64(
-                rst=self.RST, i2c_address=0x3C)
-            disp.begin()
-            # Clear display.
-            disp.clear()
-            disp.display()
-            disp.image(image)
-            disp.display()
+            # For legacy hardware, removed for hackathon code
+            print("Unsupported Hardware version!")
+            exit(1)
         image.save(IMG_OUT)
 
     def show_menu(self, title, menu_items):
