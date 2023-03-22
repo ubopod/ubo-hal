@@ -3,7 +3,6 @@
 # Hello Ubo for Hackathon Getting Started
 
 # Requirements:
-#   pip3 install adafruit-circuitpython-ssd1306
 #   pip3 install adafruit-circuitpython-rgb-display
 #   pip3 install adafruit-circuitpython-aw9523
 
@@ -24,7 +23,7 @@ lcd = LCD()
 """
 Keypad Mapping:
 
-       ____________
+       ___________
       |           |
 0  <= |  240x240  | /\   up  [3]
 1  <= |  Display  |
@@ -72,7 +71,7 @@ Demo "Beep"
 Demo "Ambient"
   0) Light Level  {sense.py}
   1) Temperature  {temp.py}
-  1) Mic Volume   {mic.py}
+  2) Mic Volume   {mic.py}
   Back --> Demo Menu
   Home --> Exiting
 
