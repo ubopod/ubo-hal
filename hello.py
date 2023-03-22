@@ -11,15 +11,79 @@ import os
 import sys
 import board
 import math
-from ubo_keypad.ubo_keypad import KEYPAD as KEYPAD # RENAMED directory keypad to ubo_keypad (confilicted with Python library "keypad")
-from display.lcd import LCD as LCD
 from time import sleep
 
-#up_dir = os.path.dirname(os.path.abspath(__file__))+'/../'
-#sys.path.append(up_dir)
+# RENAMED directory keypad to ubo_keypad (confilicted with Python library "keypad")
+from ubo_keypad.ubo_keypad import KEYPAD as KEYPAD
+from display.lcd import LCD as LCD
 
 lcd = LCD()
 #lcd.set_lcd_present(1)
+
+
+"""
+Keypad Mapping:
+
+       ____________
+      |           |
+0  <= |  240x240  | /\   up  [3]
+1  <= |  Display  |
+2  <= |           | \/  down [4]
+      |___________|
+
+       ( < ] [ # )
+    [5] back home [6]
+
+         X |-+| O
+          mic [7]
+
+
+Menu Flow Chart:
+
+
+Welcome screen while initializing...
+    || (pauses while keypad loads)
+    \/
+Continue "Intro Prompt"
+   Yes / No --> EXITING
+    ||
+    \/
+Demo Menu
+  0) Demo "Blink"
+  1) Demo "Beep"
+  2) Demo "Ambient"
+  Back --> Continue "Intro Prompt"
+  Home --> Exiting
+
+Demo "Blink"
+  0) Color Blink {blink.py}
+  1) Color Fade  {fade.py}
+  2) Color Chase {chase.py}
+  Back --> Demo Menu
+  Home --> Exiting
+
+Demo "Beep"
+  0) Play Tone {tone.py}
+  1) Play Sound {wav.py}
+  2) Play mp3   {mp3.py}
+  Back --> Demo Menu
+  Home --> Exiting
+
+Demo "Ambient"
+  0) Light Level  {sense.py}
+  1) Temperature  {temp.py}
+  1) Mic Volume   {mic.py}
+  Back --> Demo Menu
+  Home --> Exiting
+
+Exiting
+  Home / Back --> Demo Menu
+   ||
+   \/
+  Quit
+
+"""
+
 
 class state_machine(KEYPAD):
     def __init__(self, *args, **kwargs):
@@ -37,12 +101,12 @@ class state_machine(KEYPAD):
 
         if inputs > -1:
             if self.state_index == 0:
-                if self.BUTTONS[index]=="1": #YES
+                if self.BUTTONS[index]=="1":  # 'YES'
                     print("> YES")
                     lcd.display([(1,"Yes",0,"white"), (2,"was",0,"cyan"), (3,"hit",0,"green")], 20)
                     sleep(2)
                     self.prompt()
-                if self.BUTTONS[index]=="2": #NO
+                if self.BUTTONS[index]=="2":  # 'NO'
                     print("> NO")
                     lcd.display([(1,"Exiting...",0,"grey"),
                                  (2,"come back",0,"cyan"),
@@ -50,7 +114,7 @@ class state_machine(KEYPAD):
                                  (4,"press home",0,"white"),
                                  (3,"to quit",0,"red")],
                                    20)
-                if self.BUTTONS[index]=="home": #NO
+                if self.BUTTONS[index]=="home":
                     print("> HOME")
                     lcd.display([(1," Going home",0,"white"),
                                  (2,"   Good Bye",0,"red"),
