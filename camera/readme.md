@@ -1,0 +1,1 @@
+This is the example for the camera module
