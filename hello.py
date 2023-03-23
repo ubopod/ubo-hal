@@ -71,15 +71,9 @@ Welcome screen while initializing...
 4:Demo "Ambient"
   0) Light Level  {sense.py}
   1) Temperature  {temp.py}
-<<<<<<< HEAD
-  1) Mic Volume   {mic.py}
-  Back ==> Demo Menu
-  Home ==> Exiting
-=======
   2) Mic Volume   {mic.py}
   Back --> Demo Menu
   Home --> Exiting
->>>>>>> c221903e816c8bc6ba17d5aedbd1006f1f705e59
 
 99:Exiting
   Home / Back ==> Demo Menu
@@ -159,11 +153,11 @@ class state_machine(KEYPAD):
                 self.state_index = 1
                 self.demo_menu()
 
-            if button=="home" and self.state_index == 99:
+            if button == "home" and self.state_index == 99:
                 print("> QUIT")
                 print("'ubo-sdk/hello.py' to restart")
                 self.state_index = 100
-            elif button=="home":
+            elif button == "home":
                 print("> Exiting!")
                 self.state_index = 99
                 self.exiting()
