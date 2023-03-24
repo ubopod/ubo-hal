@@ -325,6 +325,13 @@ class LCD:
                 disp.image(image)
                 disp.display()
         
+    def show_still_image(self, image_file):
+        image = Image.open(image_file)
+        new_size = (240, 240)
+        image = image.resize(new_size)
+        if self.version == 2:
+            image = image.rotate(270)
+        self.lcd.image(image, 0, 0)
 
     def show_logo(self, x=0, y=0):
         if (self.lcd_present == 0):
