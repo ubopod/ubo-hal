@@ -18,6 +18,14 @@ from time import sleep
 from ubo_keypad.ubo_keypad import KEYPAD as KEYPAD
 from display.lcd import LCD as LCD
 
+# Load all demo's
+import demos.blink
+import demos.fade
+import demos.chase
+import demos.tone
+import demos.wav
+import demos.mp3
+
 lcd = LCD()
 #lcd.set_lcd_present(1)
 
@@ -168,6 +176,7 @@ class state_machine(KEYPAD):
 
     def launch_demo(self, demo):
         print(demo)
+        eval("demos." + demo + ".demo")()
 
     def prompt(self):
         lcd.clear()
