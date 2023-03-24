@@ -5,6 +5,8 @@
 # Requirements:
 #   pip3 install adafruit-circuitpython-rgb-display
 #   pip3 install adafruit-circuitpython-aw9523
+#   pip3 install adafruit-circuitpython-busdevice
+#   pip3 install board
 
 import os
 import sys
