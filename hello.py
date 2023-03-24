@@ -158,6 +158,7 @@ class state_machine(KEYPAD):
             if button == "home" and self.state_index == 99:
                 print("> QUIT")
                 print("'ubo-sdk/hello.py' to restart")
+                self.quiting()
                 self.state_index = 100
             elif button == "home":
                 print("> Exiting!")
@@ -186,20 +187,29 @@ class state_machine(KEYPAD):
 
     def demo_ambient(self):
         lcd.clear()
-        lcd.show_menu("Ambient", ["Sense", "Mic", "Temperature"])
+        lcd.show_menu("Ambient", ["Sense", "Microphone", "Temperature"])
 
     def exiting(self):
-        print("EXITING...")
         lcd.clear()
         lcd.display([
-            (1," Going home",0,"white"),
-            (2,"   Good Bye",0,"red"),
-            (3,"     Hacker",0,"orange"),
+            (1,"Press HOME",0,"white"),
+            (2,"to quit, or",0,"red"),
+            (3,"Press BACK",0,"orange"),
             (4," - - - - - - - -",0,"grey"),
             (5,"run ./hello.py",0,"cyan"),
             (6,"to re-launch",0,"cyan")
                     ], 20)
-        print("EXIT TEXT")
+
+    def quiting(self):
+        lcd.clear()
+        lcd.display([
+            (1,"PROGRAM QUIT",0,"white"),
+            (2,"goodbye hacker",0,"blue"),
+            (3,"",0,"orange"),
+            (4," - - - - - - - -",0,"grey"),
+            (5,"run ./hello.py",0,"cyan"),
+            (6,"to re-launch",0,"cyan")
+                    ], 20)
 
 def main():
 
@@ -217,7 +227,7 @@ def main():
 
     S = state_machine()
     S.prompt()
-    while (S.state_index != 99): # check state machine state
+    while (S.state_index < 100): # check state machine state
         #print("state_index = {0}",S.state_index)
         sleep(0.1)
     sys.exit(0)
