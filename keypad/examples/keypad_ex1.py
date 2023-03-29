@@ -2,7 +2,8 @@
 # UBO SDK:
 #          keypad.py
 # Description:
-# This is an example of the way we can use the
+# This is an example of the way we can use the keypad
+#
 #
 # ==================================================
 import time

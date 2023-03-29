@@ -94,6 +94,8 @@ class KEYPAD(object):
         Detailed info about the GPIO header and pins
         can be found here https://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/
         """
+
+        logger = logging.getLogger(__name__)
         # Use GPIO numbers not pin numbers
         GPIO.setmode(GPIO.BCM)
         i2c = board.I2C()
@@ -125,6 +127,7 @@ class KEYPAD(object):
 
         # Perform reset of the expander
         self.aw.reset()
+        logger.debug("Inputs: {:016b}".format(self.aw.inputs))
         print("Inputs: {:016b}".format(self.aw.inputs))
 
         self.aw.directions = 0xff00
@@ -213,7 +216,7 @@ class KEYPAD(object):
                 self.button_event()
 
             if ((self.last_inputs & 0x80) == 128) and \
-                    (self.mic_switch_status == False):
+                    (self.mic_switch_status is False):
                 print("Mic Switch is now ON")
                 self.index = 7
                 self.buttonPressed = self.BUTTONS[self.index]
@@ -292,7 +295,7 @@ def command_line_params(argv: object) -> object:
                         help='Select a verbosity level to use')
 
     # Add the Config option
-    pakeypad_ex2rser.add_argument('--config', '-c',
+    parser.add_argument('--config', '-c',
                         dest='config_file', nargs='?', type=str,
                         help='Specify a Configuration file')
 

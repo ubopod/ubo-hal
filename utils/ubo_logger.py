@@ -1,6 +1,13 @@
+# ===============================================================
+# This python module to handle a simple logging mechanism
+# it relies  on the following modules:
+# logging: https://docs.python.org/3/library/logging.html
+# logging.config: https://docs.python.org/3/library/logging.config.html
+# loging.handlers: https://docs.python.org/3/library/logging.handlers.html
+#
+# ===============================================================
 import os
 import sys
-import logging.config
 import platform
 from datetime import datetime
 import logging
