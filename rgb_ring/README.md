@@ -59,16 +59,16 @@ then instantiate a new client object:
 
 To enable or disable the client, run:
 
-`LEDClient.set_enabled(True) #False`
+`lc.set_enabled(True) #False`
 
 
 To sets all LEDs to the specified color:
 
-`LEDClient.set_all(color=(255, 255, 255))`
+`lc.set_all(color=(0, 127, 0))`
 
 To turn off all LEDs:
 
-`LEDClient.blank()`
+`lc.blank()`
 
 To set brightness to a specific level 
 between 0 and 1 where 0 means darkness 
