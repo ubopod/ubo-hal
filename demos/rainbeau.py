@@ -5,6 +5,5 @@ def demo():
     # Create instance of RGB LED Ring Client
     lc = LEDClient()
 
-    # Loop thru and fade down to zero
-    for x in range(-20, 1):
-        lc.set_all(color=(0, int(x * -8), 0))
+    # Show the Rainbow effect
+    lc.rainbow(rounds=5, wait=2)

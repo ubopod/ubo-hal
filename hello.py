@@ -19,9 +19,9 @@ from ubo_keypad.ubo_keypad import KEYPAD as KEYPAD
 from display.lcd import LCD as LCD
 
 # Load all demo's
-import demos.blink
+import demos.wink
 import demos.fade
-import demos.chase
+import demos.rainbeau
 import demos.tone
 import demos.wav
 import demos.mp3
@@ -58,27 +58,27 @@ Welcome screen while initializing...
     ||
     \/
 1:Demo Menu
-  0) Demo "Blink"
-  1) Demo "Beep"
-  2) Demo "Ambient"
+  0) Demo "Blinks"
+  1) Demo "Beeps"
+  2) Demo "Sensors"
   Back ==> Continue "Intro Prompt"
   Home ==> Exiting
 
-2:Demo "Blink"
-  0) Color Blink {blink.py}
+2:Demo "RGB Ring"
+  0) Color Wink {wink.py}
   1) Color Fade  {fade.py}
-  2) Color Chase {chase.py}
+  2) Color Rainbow {rainbeau.py}
   Back ==> Demo Menu
   Home ==> Exiting
 
-3:Demo "Beep"
+3:Demo "Sounds"
   0) Play Tone {tone.py}
   1) Play Sound {wav.py}
   2) Play mp3   {mp3.py}
   Back ==> Demo Menu
   Home ==> Exiting
 
-4:Demo "Ambient"
+4:Demo "Sensors"
   0) Light Level  {sense.py}
   1) Temperature  {temp.py}
   2) Mic Volume   {mic.py}
@@ -124,22 +124,22 @@ class state_machine(KEYPAD):
                 # Demo Menu
                 if button == "0":
                     self.state_index = 2
-                    self.demo_blink()
+                    self.demo_blinks()
                 elif button == "1":
                     self.state_index = 3
-                    self.demo_beep()
+                    self.demo_beeps()
                 elif button == "2":
                     self.state_index = 4
-                    self.demo_ambient()
+                    self.demo_sensors()
             elif self.state_index == 2:
                 # Blink Demos
                 print("Blink Demos")
                 if button == "0":
-                    self.launch_demo("blink")
+                    self.launch_demo("wink")
                 elif button == "1":
                     self.launch_demo("fade")
                 elif button == "2":
-                    self.launch_demo("chase")
+                    self.launch_demo("rainbeau")
             elif self.state_index == 3:
                 # Beep Demos
                 print("Beep Demos")
@@ -150,8 +150,8 @@ class state_machine(KEYPAD):
                 elif button == "2":
                     self.launch_demo("mp3")
             elif self.state_index == 4:
-                # Ambient Demos
-                print("Ambient Demos")
+                # Sensor Demos
+                print("Sensor Demos")
                 if button == "0":
                     self.launch_demo("sense")
                 elif button == "1":
@@ -184,19 +184,19 @@ class state_machine(KEYPAD):
 
     def demo_menu(self):
         lcd.clear()
-        lcd.show_menu("Demo's", ["Blink", "Beep", "Ambient"])
+        lcd.show_menu("Demo's", ["Blinks", "Beeps", "Sensors"])
 
-    def demo_blink(self):
+    def demo_blinks(self):
         lcd.clear()
-        lcd.show_menu("RGB Ring", ["Blink", "Fade", "Chase"])
+        lcd.show_menu("RGB Ring", ["Wink", "Fade", "Rainbow"])
 
-    def demo_beep(self):
+    def demo_beeps(self):
         lcd.clear()
-        lcd.show_menu("Beep", ["Tone", "WAV", "mp3"])
+        lcd.show_menu("Sounds", ["Tone", "WAV", "mp3"])
 
-    def demo_ambient(self):
+    def demo_sensors(self):
         lcd.clear()
-        lcd.show_menu("Ambient", ["Sense", "Microphone", "Temperature"])
+        lcd.show_menu("Sensors", ["Light", "Microphone", "Temperature"])
 
     def exiting(self):
         lcd.clear()
