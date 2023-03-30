@@ -123,6 +123,6 @@ lc.blank()
 # Set progress wheel to 60%
 for i in range(25):
     lc.progress_wheel(color = (255,255,255), 
-                    percentage = i/25):
+                    percentage = i/25)
     time.sleep(0.1)
 lc.blank()
