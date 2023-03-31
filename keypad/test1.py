@@ -4,7 +4,6 @@ import os
 up_dir = os.path.dirname(os.path.abspath(__file__)) + '/../'
 sys.path.append(up_dir)
 
-#from ubo_logger import *
 from utils import ubo_logger
 
 
