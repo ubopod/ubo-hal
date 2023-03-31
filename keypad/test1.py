@@ -1,11 +1,11 @@
 import sys
 import os
 
-up_dir = os.path.dirname(os.path.abspath(__file__)) + '/../utils'
+up_dir = os.path.dirname(os.path.abspath(__file__)) + '/../'
 sys.path.append(up_dir)
 
-from ubo_logger import *
-#import utils.ubo_logger
+#from ubo_logger import *
+from utils import ubo_logger
 
 
 def main(argv: object):
