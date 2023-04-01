@@ -7,7 +7,9 @@ else
    git clone https://github.com/HinTak/seeed-voicecard
    cd seeed-voicecard
    git pull
-   git checkout v6.0
+   # if uname -r (kernel version) is 6.1.19-v8+
+   # for older kernel versions use v6.1, v6.0, or v5.9 
+   git checkout v6.2
    sudo ./install.sh
    cd ..
 fi
