@@ -25,9 +25,9 @@ import demos.rainbeau
 import demos.tone
 import demos.wav
 import demos.mp3
+import demos.clock
 
 lcd = LCD()
-#lcd.set_lcd_present(1)
 
 
 """
@@ -131,6 +131,11 @@ class state_machine(KEYPAD):
                 elif button == "2":
                     self.state_index = 4
                     self.demo_sensors()
+                elif button == "up":
+                    pass
+                elif button == "down":
+                    # Set to "Clock" mode
+                    self.state_index = 66
             elif self.state_index == 2:
                 # Blink Demos
                 print("Blink Demos")
@@ -160,7 +165,9 @@ class state_machine(KEYPAD):
                     self.launch_demo("mic")
 
             if button == "back":
+                print("<- BACK")
                 self.state_index = 1
+                sleep(0.1)
                 self.demo_menu()
 
             if button == "home" and self.state_index == 99:
@@ -220,6 +227,13 @@ class state_machine(KEYPAD):
             (6,"to re-launch",0,"cyan")
                     ], 20)
 
+
+def loop(S):
+    if S.state_index == 66:
+        # tick "Clock"
+        demos.clock.tick(lcd)
+    sleep(0.1)
+
 def main():
 
     # lcd lisplay initializing text while loading
@@ -238,7 +252,7 @@ def main():
     S.prompt()
     while (S.state_index < 100): # check state machine state
         #print("state_index = {0}",S.state_index)
-        sleep(0.1)
+        loop(S)
     sys.exit(0)
 
 
