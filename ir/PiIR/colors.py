@@ -1,7 +1,7 @@
 import piir
 from time import sleep
 
-SLEEP_TIME = 0.3
+SLEEP_TIME = 1
 
 """
   Available IR Commands

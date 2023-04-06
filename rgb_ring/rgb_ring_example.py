@@ -100,7 +100,7 @@ time.sleep(2)
 # Blink
 lc.blink(color=(255, 0, 0), 
         wait=200, #turn off for miliseconds in between
-        repetions=5) # blink 5 times
+        repetitions=5) # blink 5 times
 time.sleep(1)
 
 # Spinning wheel 

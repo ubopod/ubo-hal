@@ -1,19 +1,26 @@
-UBO_HOME=/home/pi/ubo
-export PATH=$PATH:/home/pi/.local/bin
+set -x 
+UBO_HOME=/home/pi/ubo-sdk
+export PATH=$PATH:~/.local/bin
 
+###### Install debian packages ######
+sudo apt install -y python3-pyaudio portaudio19-dev python-all-dev libpcap-dev build-essential 
+
+######### Install python package ====
+python3 -m venv ~/ubo-venv
+. /home/pi/ubo-venv/bin/activate
 python3 -m pip install --upgrade pip
 pip3 install --upgrade pip
-pip3 install -r $UBO_HOME/system/setup/requirements.txt
+python3.9 -m pip install -r $UBO_HOME/system/setup/requirements.txt
 
 #######################################
 # Install SeeedStudio for speakers
 ######################################
-/bin/bash $UBO_HOME/system/setup/install_seeedstudio.sh
+sudo /bin/bash $UBO_HOME/system/setup/install_seeedstudio.sh
 
 #######################################
 # Install EEPROM tools
 ######################################
-/bin/bash $UBO_HOME/system/setup/install_eeprom.sh
+sudo /bin/bash $UBO_HOME/system/setup/install_eeprom.sh
 
 #######################################
 # Install Infra Red tools
@@ -28,4 +35,4 @@ sudo cp $UBO_HOME/system/etc/modprobe.d/snd-blacklist.conf /etc/modprobe.d/snd-b
 #######################################
 # Add systemd services
 ######################################
-/bin/bash ./start_services.sh
+sudo /bin/bash ./start_services.sh
