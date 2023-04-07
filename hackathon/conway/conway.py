@@ -52,7 +52,8 @@ def display_lcd(buffer, rows, cols, on_color='green', off_color='black'):
   base = Image.new("RGBA", (width, height), (0, 0, 0))
   overlay = Image.new("RGBA", base.size, (255, 255, 255, 0))
   txt = Image.new("RGBA", base.size, (255, 255, 255, 0))
-  radius = min( width // (cols * 2), height // (rows * 2) )
+  # radius = min( width // (cols * 2), height // (rows * 2) )
+  radius = 20
   x = k = 0
   for i in range(rows):
     x += radius
@@ -108,7 +109,6 @@ def main(argv, argc):
   if args.version:
     print(version)
     exit(0)
-
 
   rows = args.rows
   cols = args.cols
