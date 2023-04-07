@@ -4,12 +4,23 @@ import sys
 import signal
 import argparse
 from lcd import LCD as LCD
+from ubo_keypad import *
 from PIL import Image
 from time import sleep
 from random import getrandbits
 from shutil import get_terminal_size
 
 lcd = LCD()
+button_pressed = False
+
+class simple_keypad(KEYPAD):
+  def __init__(self, *args, **kwargs):
+    super(simple_keypad, self).__init__(*args, **kwargs)
+  def button_event(self):
+    global button_pressed
+    button_pressed = True
+    print('xxxxxx', self.buttonPressed)
+    return self.buttonPressed
 
 def block(i, rows, cols):
   row = i // cols
@@ -47,22 +58,18 @@ def display_text(buffer, rows, cols, on='*', off=' '):
   print('\033[1;1f', end='') # move cursor to top left  
   print('\n'.join(output), end='')
 
-def new_ellipse(self, radius, fill, outline=None, width=0):
-  """Draw an ellipse"""
-  c = Image.new('RGB', (radius * 2, radius * 2), (0, 0, 0, 0))
-  draw = ImageDraw.Draw(c)
-  draw.ellipse([0, 0, radius*2-2, radius*2-2], fill=fill, outline=outline, width=width)
-  return c
-
 def display_lcd(buffer, rows, cols, on_color='green', off_color='black'):
   width = height = 240
   base = Image.new("RGBA", (width, height), (0, 0, 0))
   overlay = Image.new("RGBA", base.size, (255, 255, 255, 0))
   txt = Image.new("RGBA", base.size, (255, 255, 255, 0))
   radius = min( width // (cols * 2), height // (rows * 2) )
-  x = k = 0
+  x_offset = width - (radius * 2 * cols)
+  y_offset = height - (radius * 2 * cols)
+  x = x_offset // 2
+  k = 0
   for i in range(rows):
-    y = 0
+    y = y_offset // 2
     for j in range(cols):
       coordinates = (x, y)
       color = on_color if buffer[k] else off_color
@@ -77,26 +84,27 @@ def display_lcd(buffer, rows, cols, on_color='green', off_color='black'):
   # out = out.convert('RGB')
   lcd.show_image(out)
 
-def display(buffer, rows, cols, on='*', off=' '):
-  display_lcd(buffer, rows, cols, 'green', 'black')
-  display_text(buffer, rows, cols, on, off)
-
-def evolve(rows, cols, buffers, blocks, on='*', off=' ', delay=0.333):
-  toggle = 0
-  while True:
-    src = buffers[toggle]
-    display(src, rows, cols, on, off)
-    toggle = 1 - toggle
-    dst = buffers[toggle]
-    convolve(src, dst, blocks)
-    sleep(delay)
-
 def randomize(buffer):
   n = len(buffer)
   r = getrandbits(n)
   for i in range(n):
     buffer[i] = r & 1
     r >>= 1
+
+def evolve(rows, cols, buffers, blocks, on='*', off=' ', on_color='green', off_color='black', delay=0.333):
+  toggle = 0
+  global button_pressed
+  while True:
+    src = buffers[toggle]
+    # display_text(src, rows, cols, on, off)
+    display_lcd(src, rows, cols, on_color, off_color)
+    toggle = 1 - toggle
+    dst = buffers[toggle]
+    convolve(src, dst, blocks)
+    sleep(delay)
+    if button_pressed:
+      randomize(dst)
+      button_pressed = False      
 
 def cleanup(sig, frame):
   print('\033[?25h', end='') # restore cursor
@@ -109,6 +117,8 @@ def main(argv, argc):
   parser.add_argument('--rows', type=int, default=0, help='rows default $LINES')
   parser.add_argument('--on', type=str, default='*', help='on default \'*\'')
   parser.add_argument('--off', type=str, default=' ', help='off default \' \'')
+  parser.add_argument('--on_color', type=str, default='green', help='on default \'*\'')
+  parser.add_argument('--off_color', type=str, default='black', help='off default \' \'')
   parser.add_argument('--delay', type=float, default=0.333, help='delay default 0.333')
   parser.add_argument('--version', action='store_true', help=str(version))
   args = parser.parse_args()
@@ -125,6 +135,8 @@ def main(argv, argc):
     if cols == 0: cols = size.columns // 2
   on = args.on
   off = args.off
+  on_color = args.on_color
+  off_color = args.off_color
   delay = args.delay
 
   num_cells = rows * cols 
@@ -135,8 +147,16 @@ def main(argv, argc):
   print('\033[2J', end='') # clear screen
   print('\033[?25l', end='') # hide cursor
 
+  try:
+    keypad = simple_keypad()
+  except:
+    # did not detect keypad on i2c bus
+    print("failed to initialize keypad")
+  if keypad.bus_address ==  False:
+    print("keypad bus_address False")
+
   randomize(buffers[0])
-  evolve(rows, cols, buffers, blocks, on, off, delay)
+  evolve(rows, cols, buffers, blocks, on, off, on_color, off_color, delay)
 
 if __name__ == '__main__':
   main(sys.argv, len(sys.argv))
