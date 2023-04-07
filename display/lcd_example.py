@@ -2,6 +2,7 @@ import os
 import sys
 import board
 from lcd import LCD as LCD
+from time import sleep
 
 lcd = LCD()
 #lcd.set_lcd_present(1)
@@ -16,6 +17,7 @@ def main():
         (5,"Line 5, Yellow",0,(255,255,0)),
         (6,"All Size 22",0,(0,255,255))],
         22)
+    sleep(1)
     # This will prompt the user to choose between two
     # options. The text and color can be customized 
     lcd.show_prompt(title="Agree?", 
@@ -25,11 +27,13 @@ def main():
                                 "color": "red"}
                                 ]
                                 )
+    sleep(1)    
     # wheel is filled up to provided circular degree (0-360)
     lcd.progress_wheel(title="Downloading...", 
                         degree=120, 
                         color=(255,255,0)
                     )
+    sleep(1)
 
 if __name__ == '__main__':
     try:
