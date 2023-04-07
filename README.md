@@ -3,7 +3,13 @@ This repo includes code for communicating and interfacing with Ubo hardware peri
 
 There are example code and readme for each peripheral inside each sub-directory.
 
-This SDK has been tested on latest 64-bit Raspberry Pi OS (uname -r: 6.1.19)
+This SDK has been tested on latest 64-bit Raspberry Pi OS release:
+
+> uname -a
+
+Linux ubo-106 6.1.21-v8+ #1642 SMP PREEMPT Mon Apr  3 17:24:16 BST 2023 aarch64 GNU/Linux
+
+32-bit OS is still under testing.
 
 ## Setup
 
@@ -17,6 +23,12 @@ git clone https://github.com/ubopod/ubo-sdk.git
 ```
 
 Currently, we assume that the SDK is cloned in /home/pi/ubo-sdk diretory. We will offer more flexibility for changing installation path in the future.
+
+It is recommended that you do a reboot after the updates are installed before continueing to the next step.
+
+```
+sudo reboot
+```
 
 ## Install
 
@@ -34,7 +46,11 @@ Next reboot the ssystem This is necessary to load drivers and new config.txt
 
 ## Activate Virtual Environment
 
-Since all python packages are installed inside ~/ubo-venv/bin/activate
+Since all python packages are installed inside the virtual environment, it must be activated to run the python scripts. 
 
-Then you should be able to run sample codes 
+```
+source ~/ubo-venv/bin/activate
+```
+
+Now you should be able to run sample codes 
 
