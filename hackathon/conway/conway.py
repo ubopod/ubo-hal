@@ -3,9 +3,13 @@ version = 0.1 # df april 2023
 import sys
 import signal
 import argparse
+from lcd import LCD as LCD
+from PIL import Image
 from time import sleep
 from random import getrandbits
 from shutil import get_terminal_size
+
+lcd = LCD()
 
 def block(i, rows, cols):
   row = i // cols
@@ -33,7 +37,7 @@ def convolve(src, dst, blocks):
     cells = tuple(src[j] for j in block)
     dst[i] = conway(cells)
 
-def display(buffer, rows, cols, on='*', off=' '):
+def display_text(buffer, rows, cols, on='*', off=' '):
   output = []
   j = 0
   for i in range(rows):
@@ -42,6 +46,32 @@ def display(buffer, rows, cols, on='*', off=' '):
     j = k
   print('\033[1;1f', end='') # move cursor to top left  
   print('\n'.join(output), end='')
+
+def display_lcd(buffer, rows, cols, on_color='green', off_color='black'):
+  width = height = 240
+  base = Image.new("RGBA", (width, height), (0, 0, 0))
+  overlay = Image.new("RGBA", base.size, (255, 255, 255, 0))
+  txt = Image.new("RGBA", base.size, (255, 255, 255, 0))
+  radius = min( width // (cols * 2), height // (rows * 2) )
+  x = k = 0
+  for i in range(rows):
+    x += radius
+    y = 0
+    for j in range(cols):
+      y += radius
+      coordinates = (x, y)
+      color = on_color if buffer[k] else off_color
+      circle = lcd.ellipse(radius, fill=color)
+      overlay.paste(circle, coordinates)
+      k += 1
+  out = Image.alpha_composite(base, txt)
+  out.paste(overlay, (0, 0), overlay)
+  out = out.rotate(0).convert('RGB')
+  lcd.show_image(out)
+
+def display(buffer, rows, cols, on='*', off=' '):
+  display_lcd(buffer, rows, cols, 'green', 'black')
+  display_text(buffer, rows, cols, on, off)
 
 def evolve(rows, cols, buffers, blocks, on='*', off=' ', delay=0.333):
   toggle = 0
@@ -78,6 +108,7 @@ def main(argv, argc):
   if args.version:
     print(version)
     exit(0)
+
 
   rows = args.rows
   cols = args.cols
