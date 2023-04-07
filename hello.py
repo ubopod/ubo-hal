@@ -25,6 +25,8 @@ import demos.rainbeau
 import demos.tone
 import demos.wav
 import demos.mp3
+import demos.light
+import demos.temperature
 import demos.clock
 
 lcd = LCD()
@@ -79,8 +81,8 @@ Welcome screen while initializing...
   Home ==> Exiting
 
 4:Demo "Sensors"
-  0) Light Level  {sense.py}
-  1) Temperature  {temp.py}
+  0) Light Level  {light.py}
+  1) Temperature  {temperature.py}
   2) Mic Volume   {mic.py}
   Back --> Demo Menu
   Home --> Exiting
@@ -158,9 +160,9 @@ class state_machine(KEYPAD):
                 # Sensor Demos
                 print("Sensor Demos")
                 if button == "0":
-                    self.launch_demo("sense")
+                    self.launch_demo("light")
                 elif button == "1":
-                    self.launch_demo("temp")
+                    self.launch_demo("temperature")
                 elif button == "2":
                     self.launch_demo("mic")
 
@@ -203,7 +205,7 @@ class state_machine(KEYPAD):
 
     def demo_sensors(self):
         lcd.clear()
-        lcd.show_menu("Sensors", ["Light", "Microphone", "Temperature"])
+        lcd.show_menu("Sensors", ["Light", "Temperature", "Microphone"])
 
     def exiting(self):
         lcd.clear()
