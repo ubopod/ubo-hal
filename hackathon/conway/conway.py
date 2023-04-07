@@ -47,27 +47,34 @@ def display_text(buffer, rows, cols, on='*', off=' '):
   print('\033[1;1f', end='') # move cursor to top left  
   print('\n'.join(output), end='')
 
+def new_ellipse(self, radius, fill, outline=None, width=0):
+  """Draw an ellipse"""
+  c = Image.new('RGB', (radius * 2, radius * 2), (0, 0, 0, 0))
+  draw = ImageDraw.Draw(c)
+  draw.ellipse([0, 0, radius*2-2, radius*2-2], fill=fill, outline=outline, width=width)
+  return c
+
 def display_lcd(buffer, rows, cols, on_color='green', off_color='black'):
   width = height = 240
   base = Image.new("RGBA", (width, height), (0, 0, 0))
   overlay = Image.new("RGBA", base.size, (255, 255, 255, 0))
   txt = Image.new("RGBA", base.size, (255, 255, 255, 0))
-  # radius = min( width // (cols * 2), height // (rows * 2) )
-  radius = 20
+  radius = min( width // (cols * 2), height // (rows * 2) )
   x = k = 0
   for i in range(rows):
-    x += radius
     y = 0
     for j in range(cols):
-      y += radius
       coordinates = (x, y)
       color = on_color if buffer[k] else off_color
-      circle = lcd.ellipse(radius, fill=color)
-      overlay.paste(circle, coordinates)
+      cell = lcd.ellipse(radius, fill=color)
+      overlay.paste(cell, coordinates)
       k += 1
+      y += (radius * 2)
+    x += (radius * 2)
   out = Image.alpha_composite(base, txt)
   out.paste(overlay, (0, 0), overlay)
-  out = out.rotate(0).convert('RGB')
+  out = out.transpose(method=0).rotate(90).convert('RGB')
+  # out = out.convert('RGB')
   lcd.show_image(out)
 
 def display(buffer, rows, cols, on='*', off=' '):
