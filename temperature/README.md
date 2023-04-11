@@ -47,6 +47,7 @@ In the temperature directory we have the following files.
 
 .
 ├── __pycache__
+
 │   └── lcd.cpython-39.pyc
 
 ├── README.md
@@ -65,4 +66,7 @@ Step 2: Run `python3 temperature.py`
 	- [Datasheet](https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf) for temprature sensor:
 
 
+
+Step 3: Run `python3 temp-cpu.py`
+	This shows the cpu temperature
 
