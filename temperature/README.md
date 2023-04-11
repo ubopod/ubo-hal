@@ -27,7 +27,7 @@ You shoud see the ambient temperature displayed on the LCD display similar to im
 
 2) Run `python3 temp-cpu.py`
 
-This shows the CPU temperature on the LCD display. It uses command `vcgencmd` command to get the CPU temperature. 
+This shows the CPU temperature on the LCD display. It uses command `vcgencmd measure_temp` command to get the CPU temperature. 
 To learn more about this command, look at the manual: `man vcgencmd`
 
 ### Temperature sensor info
