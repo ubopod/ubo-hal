@@ -4,13 +4,17 @@ This sample code will take the temperature and show it on the LCD
 
 Step 1: It is assumed that the ubo-sdk has been cloned in a local directory
         the directory should look as follows:
+		It is further assumed that you are running in the context of the 
+		ubo-venv python virtual environment. 
+		To activate this virtual environment you can enter the cli command 
+		$ ubo-venv/bin/activate
 
 .
 ├── audio
 
 ├── camera
 
-├── datasheets
+├── datasheetsvcgencmd measure_temp
 
 ├── demos
 
@@ -70,4 +74,7 @@ You shoud see on the LCD display something resembling this
 
 Step 3: Run `python3 temp-cpu.py`
 	This shows the cpu temperature
+	The method to obtain this cpu temperature is based on the command **vcgencmd** 
+	To know more about this feature, look at the manual for this cmd.
+	The man page for it can be seen by enteru
 
