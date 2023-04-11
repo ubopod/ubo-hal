@@ -32,5 +32,4 @@ To learn more about this command, look at the manual: `man vcgencmd`
 
 ### Temperature sensor info
 
-[Datasheet](https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf) for temprature sensor
-[Adafruit PCT2075 Python Library](https://docs.circuitpython.org/projects/pct2075/en/latest/)
+Ubo uses PCT2075 Temperature sensor by NXP. Fore more information, you can checkout the [datasheet](https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf). We use the [Adafruit PCT2075 Python Library](https://docs.circuitpython.org/projects/pct2075/en/latest/) to communicate with the sensor via I2C bus. The sensor uses `0x48` address on the I2C bus. 
