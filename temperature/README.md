@@ -17,7 +17,7 @@ In the temperature directory we have the following files.
 
 Step 2: Run `python3 temperature.py`
 
-### What Sensor are we using for to measure the temperature
+### Temperature sensor info:
 	- [Datasheet](https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf) for temprature sensor:
 	- [Adafruit PCT2075 Python Library] (https://docs.circuitpython.org/projects/pct2075/en/latest/)
 
