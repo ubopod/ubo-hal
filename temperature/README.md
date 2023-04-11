@@ -46,13 +46,10 @@ In the temperature directory we have the following files.
 
 
 .
-├── __pycache__
 
-│   └── lcd.cpython-39.pyc
+├── README.md <- This file
 
-├── README.md
-
-├── screen.png
+├── screen.png <- An image to show the way of displaying temp
 
 ├── temp_cpu.py <- this python program shows on the LCD the temperature of the CPU
 
@@ -65,7 +62,10 @@ Step 2: Run `python3 temperature.py`
 ### What Sensor are we using for to measure the temperature
 	- [Datasheet](https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf) for temprature sensor:
 
+You shoud see on the LCD display something resembling this 
 
+
+![temperature on LCD ](screen.png)
 
 Step 3: Run `python3 temp-cpu.py`
 	This shows the cpu temperature
