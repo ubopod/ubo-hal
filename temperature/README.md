@@ -2,63 +2,17 @@ This sample code will take the temperature and show it on the LCD
 
 ### How do I run it?
 
-Step 1: It is assumed that the ubo-sdk has been cloned in a local directory
-        the directory should look as follows:
-		It is further assumed that you are running in the context of the 
-		ubo-venv python virtual environment. 
-		To activate this virtual environment you can enter the cli command 
-		$ ubo-venv/bin/activate
+Step 1: It is assumed that the ubo-sdk has been cloned in a home directory (/home/pi). Before running the examples, make sure that you activate the python virtual environment by running:
 
-.
-├── audio
+```$ source ~/ubo-venv/bin/activate```
 
-├── camera
-
-├── datasheetsvcgencmd measure_temp
-
-├── demos
-
-├── display
-
-├── error.log
-
-├── hackathon
-
-├── hello.py
-
-├── ir
-
-├── ledmanagersocket.sock
-
-├── LICENSE
-
-├── light_sensor
-
-├── README.md
-
-├── rgb_ring
-
-├── stemmaqt
-
-├── system
-
-├── **temperature**
-
-└── ubo_keypad
-        
 In the temperature directory we have the following files. 
-
-
-.
-
-├── README.md <- This file
 
 ├── screen.png <- An image to show the way of displaying temp
 
 ├── temp_cpu.py <- this python program shows on the LCD the temperature of the CPU
 
 └── temperature.py <- this python program shows on the LCD the ambient temperature
-
 
 
 Step 2: Run `python3 temperature.py`
