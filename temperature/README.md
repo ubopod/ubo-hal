@@ -19,13 +19,13 @@ In the temperature directory we have the following files.
 
 ### Step 2 
 
-Run `python3 temperature.py` 
+1) Run `python3 temperature.py` 
 
 You shoud see the ambient temperature displayed on the LCD display similar to image below: 
 
 ![temperature on LCD ](screen.png)
 
-Run `python3 temp-cpu.py`
+2) Run `python3 temp-cpu.py`
 
 This shows the CPU temperature on the LCD display. It uses command `vcgencmd` command to get the CPU temperature. 
 To learn more about this command, look at the manual: `man vcgencmd`
