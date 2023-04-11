@@ -1,8 +1,10 @@
 This sample code will take the temperature and show it on the LCD
 
-### How do I run it?
+## How do I run it?
 
-Step 1: It is assumed that the ubo-sdk has been cloned in a home directory (/home/pi). Before running the examples, make sure that you activate the python virtual environment by running:
+### Step 1: 
+
+It is assumed that the ubo-sdk has been cloned in a home directory (/home/pi). Before running the examples, make sure that you activate the python virtual environment by running:
 
 ```$ source ~/ubo-venv/bin/activate```
 
@@ -15,7 +17,9 @@ In the temperature directory we have the following files.
 └── temperature.py <- this python program shows on the LCD the ambient temperature
 
 
-Step 2: Run `python3 temperature.py`
+#### Step 2 
+
+Run `python3 temperature.py` 
 
 ### Temperature sensor info:
 
@@ -23,7 +27,6 @@ Step 2: Run `python3 temperature.py`
 [Adafruit PCT2075 Python Library](https://docs.circuitpython.org/projects/pct2075/en/latest/)
 
 You shoud see on the LCD display something resembling this 
-
 
 ![temperature on LCD ](screen.png)
 
