@@ -61,6 +61,7 @@ Step 2: Run `python3 temperature.py`
 
 ### What Sensor are we using for to measure the temperature
 	- [Datasheet](https://www.nxp.com/docs/en/data-sheet/PCT2075.pdf) for temprature sensor:
+	- [Adafruit PCT2075 Python Library] (https://docs.circuitpython.org/projects/pct2075/en/latest/)
 
 You shoud see on the LCD display something resembling this 
 
