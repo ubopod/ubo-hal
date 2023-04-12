@@ -12,7 +12,7 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 import logging.config
-#import qrcode
+import qrcode
 import time
 import textwrap
 import os
@@ -27,13 +27,15 @@ except:
 
 import configparser
 
+SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
+LIB_PATH = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(SDK_HOME_PATH)
 
 # CONFIG_FILE = '/etc/ubo/config.ini'
-# LOG_CONFIG = "/etc/ubo/logging.ini"
-# logging.config.fileConfig(LOG_CONFIG,
-#                           disable_existing_loggers=False)
-LIB_PATH = os.path.dirname(os.path.abspath(__file__))
-#print(LIB_PATH)
+LOG_CONFIG = SDK_HOME_PATH + "system/log/logging-debug.ini"
+logging.config.fileConfig(LOG_CONFIG,
+                          disable_existing_loggers=False)
+
 DIR = LIB_PATH + '/ui/'
 # UI_DIR = './ui/font-icon/font-awesome'
 TEXT_OUT = './fake_lcd'
@@ -55,6 +57,7 @@ class LCD:
         self.menu_row_skip = 22
         self.lcd_present = 1
         #self.lcd_present = self.config.getint('hw', 'lcd')
+        self.logger = logging.getLogger("lcd")
         self.button_coordinates = {
                     "0":(10,45), "1":(10,105), "2":(10,160), 
                     "up":(200, 60), "down":(200, 150) , 
@@ -73,21 +76,13 @@ class LCD:
                 self.width = 240
                 self.height = 240
             return
-
-        # # Raspberry Pi pin configuration:
-        # self.RST = 24
-        # # Note the following are only used with SPI:
-        # self.DC = 23
-        # self.CS = 9
-        # self.SPI_PORT = 0
-        # self.SPI_DEVICE = 0
         if gpio_enable:
             if (GPIO.getmode() != 11):
                 GPIO.setmode(GPIO.BCM)
             else:
-                logging.debug("GPIO is already BCM")
+                self.logging.debug("GPIO is already BCM")
         else:
-            logging.debug("GPIO not set")
+            self.logging.debug("GPIO not set")
         # proper fix incoming: version is sometimes not set right
         self.width = 240
         self.height = 240
@@ -216,22 +211,19 @@ class LCD:
                     curr_x += (len(s) + 1) * size
             elif vtype == 2:
                 # qr code
-                # it is implied that QR codes are either the ending row, or only one
-                if self.version == 2 or self.version == 3:
-                    # if screen is not big, skip QR codes
-                    qr = qrcode.QRCode(
-                        version=1,
-                        error_correction=qrcode.constants.ERROR_CORRECT_L,
-                        box_size=10,
-                        border=1,
-                    )
-                    qr.add_data(current_str)
-                    qr.make(fit=True)
-                    img_qr = qr.make_image()
-                    max_size = width - top - 5
-                    img_qr = img_qr.resize((max_size, max_size))
-                    pos = (int(width / 2 - 2 - img_qr.size[1] / 2), top + 2,)
-                    image.paste(img_qr, pos)
+                qr = qrcode.QRCode(
+                    version=1,
+                    error_correction=qrcode.constants.ERROR_CORRECT_L,
+                    box_size=10,
+                    border=1,
+                )
+                qr.add_data(current_str)
+                qr.make(fit=True)
+                img_qr = qr.make_image()
+                max_size = width - top - 5
+                img_qr = img_qr.resize((max_size, max_size))
+                pos = (int(width / 2 - 2 - img_qr.size[1] / 2), top + 2,)
+                image.paste(img_qr, pos)
             else:
                 # normal text
                 draw.text((x_pad + x_offset, top), current_str,
@@ -354,7 +346,7 @@ class LCD:
             self.lcd.image(image, x, y)
         else:
             # For legacy hardware, removed for hackathon code
-            print("Unsupported Hardware version!")
+            self.logging.error("Unsupported Hardware version!")
             exit(1)
         image.save(IMG_OUT)
 
