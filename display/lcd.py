@@ -56,31 +56,16 @@ class LCD:
         self.menu_row_y_size = 37
         self.menu_row_skip = 22
         self.lcd_present = 1
-        #self.lcd_present = self.config.getint('hw', 'lcd')            # When we reach this part of the code, it means
-            # some changes in GPIO expander triggered an
-            # interrupt but it was not due to a press on 
-            # any of the keypad buttons. Here we see
-            # if the interrupt was due to the change in
-            # microphone muute switch status. Other non
-            # keypad button events must also be handled here.
+        # self.lcd_present = self.config.getint('hw', 'lcd')            
         self.logger = logging.getLogger("lcd")
         self.button_coordinates = {
                     "0":(10,45), "1":(10,105), "2":(10,160), 
                     "up":(200, 60), "down":(200, 150) , 
                     "back":(50, 200), "home":(160, 200), "mic":(100, 200)
                     }
-        # print(self.lcd_present)
-        # LCD version:
-        # 1 is the original b&w SSD1306,
-        # 2 is 1.54 Adafruit ST7789
-        # try:
-        #     self.version = self.config.getint('hw', 'lcd-version')
-        # except configparser.NoOptionError:
-        self.version = 3
         if (self.lcd_present == 0):
-            if self.version == 2 or self.version == 3:
-                self.width = 240
-                self.height = 240
+            self.width = 240
+            self.height = 240
             return
         if gpio_enable:
             if (GPIO.getmode() != 11):
@@ -92,29 +77,28 @@ class LCD:
         # proper fix incoming: version is sometimes not set right
         self.width = 240
         self.height = 240
-        if self.version == 2 or self.version == 3:
-            # Config for display baudrate (default max is 24mhz):
-            BAUDRATE = 24000000
-            # Setup SPI bus using hardware SPI:
-            spi = board.SPI()
-            # Configuration for CS and DC pins (these are PiTFT defaults):
-            cs_pin = digitalio.DigitalInOut(board.CE0)
-            dc_pin = digitalio.DigitalInOut(board.D25)
-            reset_pin = digitalio.DigitalInOut(board.D24)
-            #try:
-            self.lcd = st7789.ST7789(spi,
-                                     height=self.height, width=self.width,
-                                     y_offset=80, x_offset=0,
-                                     rotation=180,
-                                     cs=cs_pin,
-                                     dc=dc_pin,
-                                     rst=reset_pin,
-                                     baudrate=BAUDRATE,
-                                     )
-            # This line is necessary to keep the GPIO 24 as input 
-            # to make sure LCD initialization does not change GPIO function
-            # which interferes with the IR receiver.
-            GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        # Config for display baudrate (default max is 24mhz):
+        BAUDRATE = 24000000
+        # Setup SPI bus using hardware SPI:
+        spi = board.SPI()
+        # Configuration for CS and DC pins (these are PiTFT defaults):
+        cs_pin = digitalio.DigitalInOut(board.CE0)
+        dc_pin = digitalio.DigitalInOut(board.D25)
+        reset_pin = digitalio.DigitalInOut(board.D24)
+        #try:
+        self.lcd = st7789.ST7789(spi,
+                                    height=self.height, width=self.width,
+                                    y_offset=80, x_offset=0,
+                                    rotation=180,
+                                    cs=cs_pin,
+                                    dc=dc_pin,
+                                    rst=reset_pin,
+                                    baudrate=BAUDRATE,
+                                    )
+        # This line is necessary to keep the GPIO 24 as input 
+        # to make sure LCD initialization does not change GPIO function
+        # which interferes with the IR receiver.
+        GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         return
 
     def ellipse(self, radius, fill, outline=None, width=0):
@@ -157,11 +141,10 @@ class LCD:
         self.lcd_present = int(is_lcd_present)
 
     def clear(self):
-        if self.version == 2 or self.version == 3:
-            width = self.width
-            height = self.height
-            image = Image.new("RGB", (width, height), "BLACK")
-            self.show_image(image)
+        width = self.width
+        height = self.height
+        image = Image.new("RGB", (width, height), "BLACK")
+        self.show_image(image)
 
     def display(self, strs, size):
         if (self.lcd_present == 0):
@@ -177,16 +160,12 @@ class LCD:
         top = padding
         # Move left to right keeping track of the current x position for drawing shapes.
         x_pad = padding
+        width = self.width
+        height = self.height
+        size = int(size * 1.5)
+        x_offset = 20
+        image = Image.new("RGB", (width, height), "BLACK")
 
-        if self.version == 2 or self.version == 3:
-            width = self.width
-            height = self.height
-            size = int(size * 1.5)
-            x_offset = 20
-            image = Image.new("RGB", (width, height), "BLACK")
-        else:
-            print("Unsupported Hardware version!")
-            exit(1)
 
         # Get drawing object to draw on image.
         draw = ImageDraw.Draw(image)
@@ -207,8 +186,6 @@ class LCD:
         # Write lines of text/icon/qr code.
         for _row, current_str, vtype, color in strs:
             vtype = int(vtype)
-            if not (self.version == 2 or self.version == 3):
-                color = 255
             if vtype == 1:
                 # icon
                 curr_x = x_pad + x_offset
@@ -236,17 +213,10 @@ class LCD:
                           font=rubik_regular, fill=color)
             top = top + size
         # Display image.
-        if (self.lcd_present == 0):
-            image.save(IMG_OUT)
-        else:
-            if self.version == 3:
-                self.lcd.image(image, 0, 0)
-            elif self.version == 2:
-                image = image.rotate(270)
-                self.lcd.image(image, 0, 0)
-            else:
-                disp.image(image)
-                disp.display()
+        # If lcd_present is set to zero
+        # then save to file.
+        self.show_image(image)
+
 
     def show_summary(self, strs, size):
         # Draw some shapes.
@@ -275,31 +245,20 @@ class LCD:
         # sort array based on 'row' field
         # Write lines of text/icon/qr code.
         for current_str, icon, text_color, icon_color in strs:
-            if (self.version == 2 or self.version == 3):
-                curr_x = x_pad + x_offset
-                # print(curr_x)
-                # normal text
-                draw.text((curr_x, top), current_str,
-                            font=rubik_regular, fill=text_color)
-                curr_x += (len(current_str)+1) * pixel_size
-                # print(curr_x)
-                # icon
-                #draw.text((curr_x, top), icon, font=font_icon, fill=icon_color)
-                draw.text((self.width - (x_offset + x_pad + 10), top), icon, font=font_icon, fill=icon_color)
-                # add vetical offset
-                top = top + size
+            curr_x = x_pad + x_offset
+            # print(curr_x)
+            # normal text
+            draw.text((curr_x, top), current_str,
+                        font=rubik_regular, fill=text_color)
+            curr_x += (len(current_str)+1) * pixel_size
+            # print(curr_x)
+            # icon
+            #draw.text((curr_x, top), icon, font=font_icon, fill=icon_color)
+            draw.text((self.width - (x_offset + x_pad + 10), top), icon, font=font_icon, fill=icon_color)
+            # add vetical offset
+            top = top + size
         # Display image.
-        if (self.lcd_present == 0):
-            image.save(IMG_OUT)
-        else:
-            if self.version == 3:
-                self.lcd.image(image, 0, 0)
-            elif self.version == 2:
-                image = image.rotate(270)
-                self.lcd.image(image, 0, 0)
-            else:
-                disp.image(image)
-                disp.display()
+        self.show_image(image)
 
     def set_logo_text(self, text, x=60, y=200, color="red", size=15):
         self.logo_text = text
@@ -308,27 +267,17 @@ class LCD:
         self.logo_text_color = color
         self.logo_text_size = size
 
-    def show_image(self, image):
-        # self.lcd.image(image, 0, 0)
+    def show_image(self, image, x=0, y=0):
         # Display image.
         if (self.lcd_present == 0):
             image.save(IMG_OUT)
         else:
-            if self.version == 3:
-                self.lcd.image(image, 0, 0)
-            elif self.version == 2:
-                image = image.rotate(270)
-                self.lcd.image(image, 0, 0)
-            else:
-                disp.image(image)
-                disp.display()
+            self.lcd.image(image, 0, 0)
         
     def show_still_image(self, image_file):
         image = Image.open(image_file)
         new_size = (240, 240)
         image = image.resize(new_size)
-        if self.version == 2:
-            image = image.rotate(270)
         self.lcd.image(image, 0, 0)
 
     def show_logo(self, x=0, y=0):
@@ -336,25 +285,17 @@ class LCD:
             with open(TEXT_OUT, 'w') as out:
                 out.write("[UBO LOGO]")
             return
-        if self.version == 2 or self.version == 3:
-            img = DIR + 'ubo_240_240.png'
-            image = Image.open(img)
-            if self.logo_text is not None:
-                rubik_regular = ImageFont.truetype(DIR + 'rubik/Rubik-Bold.ttf',
-                                                   self.logo_text_size)
-                draw = ImageDraw.Draw(image)
-                draw.text((self.logo_text_x, self.logo_text_y), self.logo_text,
-                          # font = rubik_regular, fill = self.logo_text_color)
-                          font=rubik_regular, fill=(255, 255, 255, 255))
-                self.logo_text = None
-            if self.version == 2:
-                image = image.rotate(270)
-            self.lcd.image(image, x, y)
-        else:
-            # For legacy hardware, removed for hackathon code
-            self.logger.error("Unsupported Hardware version!")
-            exit(1)
-        image.save(IMG_OUT)
+        img = DIR + 'ubo_240_240.png'
+        image = Image.open(img)
+        if self.logo_text is not None:
+            rubik_regular = ImageFont.truetype(DIR + 'rubik/Rubik-Bold.ttf',
+                                                self.logo_text_size)
+            draw = ImageDraw.Draw(image)
+            draw.text((self.logo_text_x, self.logo_text_y), self.logo_text,
+                        # font = rubik_regular, fill = self.logo_text_color)
+                        font=rubik_regular, fill=(255, 255, 255, 255))
+            self.logo_text = None
+        self.show_image(image, x, y)
 
     def show_menu(self, title, menu_items):
         # get a font [[MAYBE SET THE FONT GLOBALLY TOGETHER WITH BRANDING ASSETS]]
