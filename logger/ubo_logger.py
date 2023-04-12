@@ -13,6 +13,7 @@ from datetime import datetime
 import logging
 import logging.config
 import logging.handlers
+import argparse
 
 
 def configure_logging(logfile_path):
@@ -63,7 +64,7 @@ def establish_logging(local_log=True):
     if local_log is False:
         # Log on a specific filepath
         log_cfg_path = os.path.abspath(os.path.dirname(sys.argv[0])) \
-                       + '/logging.cfg'
+                       + '/config.ini'
         print(log_cfg_path)
 
         # does the path exists ?
@@ -75,7 +76,7 @@ def establish_logging(local_log=True):
                                   disable_existing_loggers=True)
 
         logger = logging.getLogger(__name__)
-        logger.debug('UBO Keypad  log')
+        logger.debug('UBO Keypad log')
     else:
         now = datetime.now().isoformat()
         now = str(now).split('.')[0].replace(':', '-')
@@ -112,4 +113,76 @@ def establish_logging(local_log=True):
         configure_logging(logs_path + '/' + now + '_UBO_Keypad.log')
         logger = logging.getLogger(__name__)
         logger.debug('UBO Keypad log')
+    return
+
+def command_line_params(argv: object) -> object:
+    """
+    This function processes the arguments found on the command line
+    We chose to use the argparse module in preference of getopt module
+    :return:
+    """
+    # =======================================================
+    # Establish the CLI commands parser
+    # we use argparse module
+    # ========================================================
+    logger = None
+
+    print(argv)
+    # Create the parser and add arguments
+    parser = argparse.ArgumentParser(prog='UBO',
+                                     description='UBO Keypad command line arguments',
+                                     epilog='UBO Keypad')
+
+    # Add the Verbose option
+    parser.add_argument('--verbose', '-v',
+                        dest='verbose_level', nargs='?', type=str,
+                        help='Select a verbosity level to use')
+
+    # Add the Config option
+    parser.add_argument('--config', '-c',
+                        dest='config_file', nargs='?', type=str,
+                        help='Specify a Configuration file')
+
+    # Parse and process the results
+    args = parser.parse_args()
+
+    # Process verbose flag
+    if args.verbose_level:
+        logger = logging.getLogger(__name__)
+        logger.debug('Verbosity Level: ' + args.verbose_level)
+        verbose_level = args.verbose_level
+
+        valid_levels = [
+            'NOTSET',
+            'DEBUG',
+            'INFO',
+            'WARNING',
+            'ERROR',
+            'CRITICAL'
+        ]
+
+        logger_level = [
+            logging.NOTSET,
+            logging.DEBUG,
+            logging.INFO,
+            logging.WARNING,
+            logging.ERROR,
+            logging.CRITICAL
+        ]
+
+        if verbose_level in valid_levels:
+            i = valid_levels.index(verbose_level)
+            logger.setLevel(logger_level[i])
+        else:
+            logger.error('An invalid verbose level was specified %s:' % verbose_level)
+
+    # Process config file flag
+    if args.config_file:
+        logger.debug('Config file: ' + args.config_file)
+        config_file = args.config_file
+        # check for existence of this file
+        if os.path.exists(config_file) is False:
+            logger.error('The specified config file %s does not exist' % config_file)
+        else:
+            logger.info('The UBO config file is %s: ' % config_file)
     return
