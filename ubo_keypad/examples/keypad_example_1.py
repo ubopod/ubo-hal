@@ -41,6 +41,7 @@ def main():
         # loop until all keypad buttons are pressed
         while (not all(keypad.buttons.values())): 
             time.sleep(1)
+        lcd.indicate_buttons("Press all", "green", buttons=keypad.buttons)
 
 
 if __name__ == '__main__':
