@@ -10,11 +10,11 @@ It is assumed that the ubo-sdk has been cloned in a home directory (/home/pi). B
 
 In the temperature directory we have the following files. 
 
-├── `screen.png` <- An image to show the way of displaying temp
+├── `screen.png` : An image to show the way of displaying temp
 
-├── `temp_cpu.py` <- this python program shows the temperature of the CPU on the LCD
+├── `temp_cpu.py` : this python program shows the temperature of the CPU on the LCD
 
-└── `temperature.py` <- this python program shows the ambient temperature on the LCD 
+└── `temperature.py` : this python program shows the ambient temperature on the LCD 
 
 
 ### Step 2 
