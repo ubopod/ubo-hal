@@ -9,8 +9,10 @@ import time
 import signal
 import os
 import sys
-up_dir = os.path.dirname(os.path.abspath(__file__)) + '/../'
-sys.path.append(up_dir)
+
+SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
+sys.path.append(SDK_HOME_PATH)
+
 # above line is needed for following classes:
 # from led_client import LEDClient  # noqa E402 need up_dir first
 # from lcd import LCD as LCD  # noqa E402 need up_dir first
@@ -18,15 +20,13 @@ try:
     from self.configparser import configparser
 except ImportError:
     import configparser
-display = True
 
 
-DIR = './ui/'
-CONFIG_FILE = './config/config.ini'
-STATUS_FILE = './info/status.ini'
-# LOG_CONFIG = "./log/logging.ini"
-# logging.config.fileConfig(LOG_CONFIG,
-#                           disable_existing_loggers=False)
+# CONFIG_FILE = './config/config.ini'
+# STATUS_FILE = './info/status.ini'
+LOG_CONFIG = SDK_HOME_PATH + "system/log/logging-debug.ini"
+logging.config.fileConfig(LOG_CONFIG,
+                          disable_existing_loggers=False)
 INT_EXPANDER = 5
 # BUTTONS = ["0", "1", "2", "up", "down", "back", "home", "mic"]
 
@@ -38,18 +38,11 @@ class KEYPAD(object):
         # self.config.read(CONFIG_FILE)
         # self.status = configparser.ConfigParser()
         # self.status.read(STATUS_FILE)
-        # self.logger = logging.getLogger("keypad")
+        self.logger = logging.getLogger("keypad")
         self.display_active = False
         self.window_stack = []
         self.led_enabled = True
-        # self.led_client = LEDClient()
-        #if (int(self.config.get('hw', 'button-version'))) == 1:
-        #    # this is an old model, no need for the keypad service
-        #    print("old keypad")
-        #    self.enabled = False
-        #    return
-        #else:
-        print("Initialising keypad...")
+        self.logger.debug("Initialising keypad...")
         self.aw = None
         self.mic_switch_status = False
         self.last_inputs = None
@@ -71,16 +64,11 @@ class KEYPAD(object):
             self.aw = adafruit_aw9523.AW9523(i2c, 0x58)
             new_i2c = i2c_device.I2CDevice(i2c, 0x58)
             self.bus_address = "0x58"
-        except:
-            try:
-                self.aw = adafruit_aw9523.AW9523(i2c, 0x5b)
-                new_i2c = i2c_device.I2CDevice(i2c, 0x5b)
-                self.bus_address = "0x5b"
-            except:
-                # Test this scenario
-                self.bus_address = False
-                print("Failed to initialized I2C Bus")
-                return
+        except Exception as e: 
+            self.bus_address = False
+            self.logger.error("Failed to initialized I2C Bus on address 0x58")
+            self.logger.error(e)
+            return
         self.aw.reset()
         # print("Inputs: {:016b}".format(self.aw.inputs))
         self.aw.directions = 0xff00
@@ -127,10 +115,10 @@ class KEYPAD(object):
         # print("Inputs: {:016b}".format(_inputs))
         for i in range(1):
             self.last_inputs = self.aw.inputs
-            print("Inputs: {:016b}".format(self.last_inputs))
+            self.logger.debug("Inputs: {:016b}".format(self.last_inputs))
             # print(self.last_inputs & 0x80)
             self.mic_switch_status = ((self.last_inputs & 0x80) == 128)
-            print("mic switch is " + str(self.mic_switch_status))
+            self.logger.debug("mic switch is " + str(self.mic_switch_status))
             time.sleep(0.5)
         time.sleep(0.5)
         GPIO.add_event_detect(INT_EXPANDER, GPIO.FALLING, callback=self.key_press_cb)
@@ -139,22 +127,22 @@ class KEYPAD(object):
     def key_press_cb(self,channel):
         #read inputs
         self.last_inputs = self.aw.inputs
-        print("Inputs: {:016b}".format(self.last_inputs))
+        self.logger.debug("Inputs: {:016b}".format(self.last_inputs))
         inputs = 127 - self.last_inputs & 0x7F
         # if input is 0, then only look at microphone
         # switch state change
         if inputs == 0:
-            print("no keypad change")
+            self.logger.debug("no keypad change")
             if ((self.last_inputs & 0x80) == 0) and \
                 (self.mic_switch_status == True):
-                print("Mic Switch is now OFF")
+                self.logger.debug("Mic Switch is now OFF")
                 self.index = 7
                 self.buttonPressed = self.BUTTONS[self.index]
                 self.mic_switch_status = False
                 self.button_event()
             if ((self.last_inputs & 0x80) == 128) and \
                 (self.mic_switch_status == False):
-                print("Mic Switch is now ON")
+                self.logger.debug("Mic Switch is now ON")
                 self.index = 7
                 self.buttonPressed = self.BUTTONS[self.index]
                 self.mic_switch_status = True
@@ -169,20 +157,20 @@ class KEYPAD(object):
             self.buttonPressed = self.BUTTONS[self.index]
             self.button_event()
             if self.BUTTONS[self.index] == "up":
-                print("Key up on " + str(self.index))
+                self.logger.debug("Key up on " + str(self.index))
             if self.BUTTONS[self.index] == "down":
-                print("Key down on " + str(self.index))
+                self.logger.debug("Key down on " + str(self.index))
             if self.BUTTONS[self.index] == "back":
-                print("Key back on " + str(self.index))
+                self.logger.debug("Key back on " + str(self.index))
             if self.BUTTONS[self.index] in ["1", "2", "0"]:
-                print("Key side =" + str(self.index))
+                self.logger.debug("Key side =" + str(self.index))
             if self.BUTTONS[self.index] == "home":
-                print("Key home on " + str(self.index))
+                self.logger.debug("Key home on " + str(self.index))
             return self.BUTTONS[self.index]
 
     def get_mic_switch_status(self):
         inputs = self.aw.inputs
-        print("Inputs: {:016b}".format(inputs))
+        self.logger.debug("Inputs: {:016b}".format(inputs))
         # microphone switch is connected to bit 8th
         # of the GPIO expander
         return ((inputs & 0x80) == 128)
@@ -192,14 +180,10 @@ class KEYPAD(object):
 
 
 
-
 def main():
     keypad = KEYPAD()
     if keypad.enabled is False:
         return
-    s = "OFF"
-    if keypad.led_enabled:
-        s = "ON"
     while True:
         time.sleep(100)
 
