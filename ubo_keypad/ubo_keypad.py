@@ -173,7 +173,7 @@ class KEYPAD(object):
             self.index = 500 #invalid index
             return
         self.index = (int)(math.log2(inputs))
-        print("index is " + str(self.index))
+        self.logger.info("index is " + str(self.index))
         if inputs > -1:
             self.buttonPressed = self.BUTTONS[self.index]
             self.button_event()
