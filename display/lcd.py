@@ -56,7 +56,13 @@ class LCD:
         self.menu_row_y_size = 37
         self.menu_row_skip = 22
         self.lcd_present = 1
-        #self.lcd_present = self.config.getint('hw', 'lcd')
+        #self.lcd_present = self.config.getint('hw', 'lcd')            # When we reach this part of the code, it means
+            # some changes in GPIO expander triggered an
+            # interrupt but it was not due to a press on 
+            # any of the keypad buttons. Here we see
+            # if the interrupt was due to the change in
+            # microphone muute switch status. Other non
+            # keypad button events must also be handled here.
         self.logger = logging.getLogger("lcd")
         self.button_coordinates = {
                     "0":(10,45), "1":(10,105), "2":(10,160), 
@@ -80,9 +86,9 @@ class LCD:
             if (GPIO.getmode() != 11):
                 GPIO.setmode(GPIO.BCM)
             else:
-                self.logging.debug("GPIO is already BCM")
+                self.logger.debug("GPIO is already BCM")
         else:
-            self.logging.debug("GPIO not set")
+            self.logger.debug("GPIO not set")
         # proper fix incoming: version is sometimes not set right
         self.width = 240
         self.height = 240
@@ -346,7 +352,7 @@ class LCD:
             self.lcd.image(image, x, y)
         else:
             # For legacy hardware, removed for hackathon code
-            self.logging.error("Unsupported Hardware version!")
+            self.logger.error("Unsupported Hardware version!")
             exit(1)
         image.save(IMG_OUT)
 
