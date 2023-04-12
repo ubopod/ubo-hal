@@ -2,8 +2,11 @@ import time
 import os
 import sys
 
-SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
+SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../../'
 sys.path.append(SDK_HOME_PATH)
+
+up_dir = os.path.dirname(os.path.abspath(__file__)) + '/../'
+sys.path.append(up_dir)
 
 from display.lcd import LCD as LCD
 from ubo_keypad import * # Might have to revisit this form of import
