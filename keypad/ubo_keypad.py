@@ -40,17 +40,16 @@ from logger.ubo_logger import establish_logging, command_line_params
 # above line is needed for following classes:
 # from led_client import LEDClient  # noqa E402 need up_dir first
 # from lcd import LCD as LCD  # noqa E402 need up_dir first
-try:
-    from self.configparser import configparser
-except ImportError:
-    import configparser
-display = True
+# try:
+#     from self.configparser import configparser
+# except ImportError:
+#     import configparser
 
 
 # CONFIG_FILE = './config/config.ini'
-# LOG_CONFIG = "./log/logging.ini"
-# logging.config.fileConfig(LOG_CONFIG,
-#                           disable_existing_loggers=False)
+LOG_CONFIG = "../logger/logging.ini"
+logging.config.fileConfig(LOG_CONFIG,
+                           disable_existing_loggers=False)
 INT_EXPANDER = 5
 
 
@@ -67,14 +66,14 @@ class KEYPAD(object):
         correctly iniRemovetialized and functional
         aw925 GPIO extender need to be available
         """
-        logger = logging.getLogger(__name__)
+        #logger = logging.getLogger(__name__)
+        self.logger = logging.getLogger("keypad")
         # self.config = configparser.ConfigParser()
         # self.config.read(CONFIG_FILE)
-        # self.logger = logging.getLogger("keypad")
         self.display_active = False
         self.window_stack = []
         self.led_enabled = True
-        logger.debug('Initialising keypad...')
+        self.logger.debug('Initialising keypad...')
         self.aw = None
         self.mic_switch_status = False
         self.last_inputs = None
@@ -116,14 +115,14 @@ class KEYPAD(object):
             new_i2c = i2c_device.I2CDevice(i2c, 0x58)
             self.bus_address = "0x58"
         except ValueError as e:
-            logger.debug(e)
-            logger.debug('Did not detect GPIO expander 0x58 address on I2C bus')
+            self.logger.debug(e)
+            self.logger.debug('Did not detect GPIO expander 0x58 address on I2C bus')
             self.bus_address = False
             return
 
         # Perform reset of the expander
         self.aw.reset()
-        logger.debug("Inputs: {:016b}".format(self.aw.inputs))
+        self.logger.debug("Inputs: {:016b}".format(self.aw.inputs))
         print("Inputs: {:016b}".format(self.aw.inputs))
 
         self.aw.directions = 0xff00
@@ -279,21 +278,18 @@ def main(argv: object):
     # local_log is true if we want 
     #  
     # ==================================
-    local_log: bool = True
-    establish_logging(local_log)
+    # local_log: bool = True
+    # establish_logging(local_log)
 
     # ==================================
     # Parse the command line arguments
     # ==================================
-    command_line_params(argv)
+    # command_line_params(argv)
 
     keypad = KEYPAD()
+    keypad.logger.debug("Keypad initialized")
     if keypad.enabled is False:
         return
-    s = "OFF"
-
-    if keypad.led_enabled:
-        s = "ON"
 
     # enter loop and wait for interrupt events from
     while True:

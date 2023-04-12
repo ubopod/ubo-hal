@@ -13,7 +13,7 @@ import logging.config
 up_dir = os.path.dirname(os.path.abspath(__file__)) + '/../'
 sys.path.append(up_dir)
 
-SDK_HOME_PATH = "/home/pi/ubo-sdk/"
+SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
 LM_SOCKET_PATH = SDK_HOME_PATH + "ledmanagersocket.sock"
 # The order of the pixel colors - RGB or GRB.
 # Some NeoPixels have red and green reversed!
