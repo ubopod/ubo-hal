@@ -31,6 +31,7 @@ class LEDClient:
             try:
                 self.client.connect(LM_SOCKET_PATH)
             except Exception as e:
+                logger.error("rgb_ring_manager service is down. run sudo systemctl start rgb_ring_manager")
                 print("rgb_ring_manager service is down. run sudo systemctl start rgb_ring_manager" )
                 return
 
@@ -86,7 +87,7 @@ class LEDClient:
         self.send("rainbow " + 
                 str(rounds) + " " +
                 str(wait))
-
+zorglub
     def progress_wheel_step(self, color = (255,255,255)):
         '''
         increments the position of bright strip by one step.

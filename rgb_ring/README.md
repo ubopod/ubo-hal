@@ -117,6 +117,7 @@ wait: is in milliseconds
 
 `lc.rainbow(rounds=10, wait=5)`
 
+### bright strip step
 increments the position of bright strip by one step.
 
 `lc.progress_wheel_step(color=(0, 255, 0))`
@@ -135,8 +136,4 @@ lc.spinning_wheel(color = (255,255,255),
                 length = 10, #leds
                 repetitions = 3)
 ```    
-
-# 
-
-rgb_ring_example.py
 
