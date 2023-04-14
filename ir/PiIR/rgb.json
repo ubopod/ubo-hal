@@ -1,0 +1,87 @@
+{
+  "formats": [
+    {
+      "preamble": [
+        16,
+        8
+      ],
+      "coding": "ppm",
+      "zero": [
+        1,
+        1
+      ],
+      "one": [
+        1,
+        3
+      ],
+      "postamble": [
+        1
+      ],
+      "pre_data": "00 FF",
+      "byte_by_byte_complement": true,
+      "timebase": 570,
+      "gap": 40000,
+      "carrier": 38000
+    },
+    {
+      "preamble": [
+        24,
+        11,
+        2
+      ],
+      "coding": "ppm",
+      "zero": [
+        1,
+        2
+      ],
+      "one": [
+        4,
+        2
+      ],
+      "pre_data": "00 FF",
+      "byte_by_byte_complement": true,
+      "timebase": 380,
+      "gap": 40000,
+      "carrier": 38000
+    }
+  ],
+  "keys": {
+    "BRIGHTER": "5C",
+    "DIMMER": "5D",
+    "PAUSE": "41",
+    "POWER": "40",
+    "RED": "58",
+    "GREEN": "59",
+    "BLUE": "45",
+    "WHITE": "44",
+    "QUICK": "17",
+    "SLOW": "13",
+    "AUTO": "0F",
+    "FLASH": "0B",
+    "JUMP_RGB": "04",
+    "JUMP_ALL": "05",
+    "FADE_RGB": "06",
+    "FADE_ALL": "07",
+    "1": "58",
+    "2": "54",
+    "3": "50",
+    "4": "1C",
+    "5": "18",
+    "6": "59",
+    "7": "55",
+    "8": "51",
+    "9": "1D",
+    "10": "19",
+    "11": "45",
+    "12": "49",
+    "13": "4D",
+    "14": "1E",
+    "15": "1A",
+    "16": "44",
+    "17": "48",
+    "18": "4C",
+    "19": "1F",
+    "20": "1B"
+
+  }
+}

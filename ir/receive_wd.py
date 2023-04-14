@@ -6,12 +6,9 @@ import os
 import sys
 import time
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__))+'../')
+sys.path.append(os.path.dirname(os.path.abspath(__file__))+'/../')
 
-from lib.lcd import LCD as LCD
-#from lib.ubo_keypad import *
-#from lib.led_client import *
-#from eeprom import *
+from display.lcd import LCD as LCD
 
 lcd = LCD()
 lcd.set_lcd_present(1)

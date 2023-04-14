@@ -10,22 +10,21 @@ import stat
 from threading import Thread
 import logging.config
 
-up_dir = os.path.dirname(os.path.abspath(__file__)) + '/../'
-sys.path.append(up_dir)
+SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
+sys.path.append(SDK_HOME_PATH)
 
-SDK_HOME_PATH = "/home/pi/ubo-sdk/"
 LM_SOCKET_PATH = SDK_HOME_PATH + "ledmanagersocket.sock"
 # The order of the pixel colors - RGB or GRB.
 # Some NeoPixels have red and green reversed!
 # For RGBW NeoPixels, simply change the ORDER to RGBW or GRBW.
 ORDER = neopixel.GRB
-CONFIG_FILE = SDK_HOME_PATH + "config/config.ini"
+CONFIG_FILE = SDK_HOME_PATH + "system/config/config.ini"
 try:
     from self.configparser import configparser
 except ImportError:
     import configparser
 
-LOG_CONFIG = SDK_HOME_PATH + "log/logging-debug.ini"
+LOG_CONFIG = SDK_HOME_PATH + "system/log/logging-debug.ini"
 logging.config.fileConfig(LOG_CONFIG,
                           disable_existing_loggers=False)
 

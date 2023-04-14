@@ -6,7 +6,7 @@ import time
 
 SDK_HOME_PATH = "/home/pi/ubo-sdk/"
 LM_SOCKET_PATH = SDK_HOME_PATH + "ledmanagersocket.sock"
-LOG_CONFIG = SDK_HOME_PATH + "log/logging-debug.ini"
+LOG_CONFIG = SDK_HOME_PATH + "system/log/logging-debug.ini"
 logging.config.fileConfig(LOG_CONFIG,
                           disable_existing_loggers=False)
 
@@ -28,7 +28,12 @@ class LEDClient:
         self.client = None
         if os.path.exists(LM_SOCKET_PATH):
             self.client = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-            self.client.connect(LM_SOCKET_PATH)
+            try:
+                self.client.connect(LM_SOCKET_PATH)
+            except Exception as e:
+                logger.error("rgb_ring_manager service is down. run sudo systemctl start rgb_ring_manager")
+                print("rgb_ring_manager service is down. run sudo systemctl start rgb_ring_manager" )
+                return
 
     def __del__(self):
         if self.client is not None:

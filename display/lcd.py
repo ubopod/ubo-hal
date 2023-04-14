@@ -4,7 +4,7 @@ try:
     import board
     import digitalio
     import adafruit_rgb_display.st7789 as st7789  # pylint: disable=unused-import
-    import Adafruit_SSD1306
+    #import Adafruit_SSD1306
 except Exception as err:
     print("Possibly unsupported board: " + str(err))
 
@@ -27,13 +27,15 @@ except:
 
 import configparser
 
+SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
+LIB_PATH = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(SDK_HOME_PATH)
 
 # CONFIG_FILE = '/etc/ubo/config.ini'
-# LOG_CONFIG = "/etc/ubo/logging.ini"
-# logging.config.fileConfig(LOG_CONFIG,
-#                           disable_existing_loggers=False)
-LIB_PATH = os.path.dirname(os.path.abspath(__file__))
-#print(LIB_PATH)
+LOG_CONFIG = SDK_HOME_PATH + "system/log/logging-debug.ini"
+logging.config.fileConfig(LOG_CONFIG,
+                          disable_existing_loggers=False)
+
 DIR = LIB_PATH + '/ui/'
 # UI_DIR = './ui/font-icon/font-awesome'
 TEXT_OUT = './fake_lcd'
@@ -54,66 +56,49 @@ class LCD:
         self.menu_row_y_size = 37
         self.menu_row_skip = 22
         self.lcd_present = 1
-        #self.lcd_present = self.config.getint('hw', 'lcd')
+        # self.lcd_present = self.config.getint('hw', 'lcd')            
+        self.logger = logging.getLogger("lcd")
         self.button_coordinates = {
                     "0":(10,45), "1":(10,105), "2":(10,160), 
                     "up":(200, 60), "down":(200, 150) , 
                     "back":(50, 200), "home":(160, 200), "mic":(100, 200)
                     }
-        # print(self.lcd_present)
-        # LCD version:
-        # 1 is the original b&w SSD1306,
-        # 2 is 1.54 Adafruit ST7789
-        # try:
-        #     self.version = self.config.getint('hw', 'lcd-version')
-        # except configparser.NoOptionError:
-        self.version = 3
         if (self.lcd_present == 0):
-            if self.version == 2 or self.version == 3:
-                self.width = 240
-                self.height = 240
+            self.width = 240
+            self.height = 240
             return
-
-        # # Raspberry Pi pin configuration:
-        # self.RST = 24
-        # # Note the following are only used with SPI:
-        # self.DC = 23
-        # self.CS = 9
-        # self.SPI_PORT = 0
-        # self.SPI_DEVICE = 0
         if gpio_enable:
             if (GPIO.getmode() != 11):
                 GPIO.setmode(GPIO.BCM)
             else:
-                logging.debug("GPIO is already BCM")
+                self.logger.debug("GPIO is already BCM")
         else:
-            logging.debug("GPIO not set")
+            self.logger.debug("GPIO not set")
         # proper fix incoming: version is sometimes not set right
         self.width = 240
         self.height = 240
-        if self.version == 2 or self.version == 3:
-            # Config for display baudrate (default max is 24mhz):
-            BAUDRATE = 24000000
-            # Setup SPI bus using hardware SPI:
-            spi = board.SPI()
-            # Configuration for CS and DC pins (these are PiTFT defaults):
-            cs_pin = digitalio.DigitalInOut(board.CE0)
-            dc_pin = digitalio.DigitalInOut(board.D25)
-            reset_pin = digitalio.DigitalInOut(board.D24)
-            #try:
-            self.lcd = st7789.ST7789(spi,
-                                     height=self.height, width=self.width,
-                                     y_offset=80, x_offset=0,
-                                     rotation=180,
-                                     cs=cs_pin,
-                                     dc=dc_pin,
-                                     rst=reset_pin,
-                                     baudrate=BAUDRATE,
-                                     )
-            # This line is necessary to keep the GPIO 24 as input 
-            # to make sure LCD initialization does not change GPIO function
-            # which interferes with the IR receiver.
-            GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        # Config for display baudrate (default max is 24mhz):
+        BAUDRATE = 24000000
+        # Setup SPI bus using hardware SPI:
+        spi = board.SPI()
+        # Configuration for CS and DC pins (these are PiTFT defaults):
+        cs_pin = digitalio.DigitalInOut(board.CE0)
+        dc_pin = digitalio.DigitalInOut(board.D25)
+        reset_pin = digitalio.DigitalInOut(board.D24)
+        #try:
+        self.lcd = st7789.ST7789(spi,
+                                    height=self.height, width=self.width,
+                                    y_offset=80, x_offset=0,
+                                    rotation=180,
+                                    cs=cs_pin,
+                                    dc=dc_pin,
+                                    rst=reset_pin,
+                                    baudrate=BAUDRATE,
+                                    )
+        # This line is necessary to keep the GPIO 24 as input 
+        # to make sure LCD initialization does not change GPIO function
+        # which interferes with the IR receiver.
+        GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         return
 
     def ellipse(self, radius, fill, outline=None, width=0):
@@ -156,11 +141,10 @@ class LCD:
         self.lcd_present = int(is_lcd_present)
 
     def clear(self):
-        if self.version == 2 or self.version == 3:
-            width = self.width
-            height = self.height
-            image = Image.new("RGB", (width, height), "BLACK")
-            self.show_image(image)
+        width = self.width
+        height = self.height
+        image = Image.new("RGB", (width, height), "BLACK")
+        self.show_image(image)
 
     def display(self, strs, size):
         if (self.lcd_present == 0):
@@ -176,27 +160,12 @@ class LCD:
         top = padding
         # Move left to right keeping track of the current x position for drawing shapes.
         x_pad = padding
+        width = self.width
+        height = self.height
+        size = int(size * 1.5)
+        x_offset = 20
+        image = Image.new("RGB", (width, height), "BLACK")
 
-        if self.version == 2 or self.version == 3:
-            width = self.width
-            height = self.height
-            size = int(size * 1.5)
-            x_offset = 20
-            image = Image.new("RGB", (width, height), "BLACK")
-        else:
-            # Note you can change the I2C address by passing an i2c_address parameter like:
-            disp = Adafruit_SSD1306.SSD1306_128_64(
-                rst=self.RST, i2c_address=0x3C)
-            # Initialize library.
-            disp.begin()
-            # Clear display.
-            disp.clear()
-            disp.display()
-            # Make sure to create image with mode '1' for 1-bit color.
-            width = disp.width
-            height = disp.height
-            x_offset = 0
-            image = Image.new('1', (width, height))
 
         # Get drawing object to draw on image.
         draw = ImageDraw.Draw(image)
@@ -217,8 +186,6 @@ class LCD:
         # Write lines of text/icon/qr code.
         for _row, current_str, vtype, color in strs:
             vtype = int(vtype)
-            if not (self.version == 2 or self.version == 3):
-                color = 255
             if vtype == 1:
                 # icon
                 curr_x = x_pad + x_offset
@@ -227,39 +194,29 @@ class LCD:
                     curr_x += (len(s) + 1) * size
             elif vtype == 2:
                 # qr code
-                # it is implied that QR codes are either the ending row, or only one
-                if self.version == 2 or self.version == 3:
-                    # if screen is not big, skip QR codes
-                    qr = qrcode.QRCode(
-                        version=1,
-                        error_correction=qrcode.constants.ERROR_CORRECT_L,
-                        box_size=10,
-                        border=1,
-                    )
-                    qr.add_data(current_str)
-                    qr.make(fit=True)
-                    img_qr = qr.make_image()
-                    max_size = width - top - 5
-                    img_qr = img_qr.resize((max_size, max_size))
-                    pos = (int(width / 2 - 2 - img_qr.size[1] / 2), top + 2,)
-                    image.paste(img_qr, pos)
+                qr = qrcode.QRCode(
+                    version=1,
+                    error_correction=qrcode.constants.ERROR_CORRECT_L,
+                    box_size=10,
+                    border=1,
+                )
+                qr.add_data(current_str)
+                qr.make(fit=True)
+                img_qr = qr.make_image()
+                max_size = width - top - 5
+                img_qr = img_qr.resize((max_size, max_size))
+                pos = (int(width / 2 - 2 - img_qr.size[1] / 2), top + 2,)
+                image.paste(img_qr, pos)
             else:
                 # normal text
                 draw.text((x_pad + x_offset, top), current_str,
                           font=rubik_regular, fill=color)
             top = top + size
         # Display image.
-        if (self.lcd_present == 0):
-            image.save(IMG_OUT)
-        else:
-            if self.version == 3:
-                self.lcd.image(image, 0, 0)
-            elif self.version == 2:
-                image = image.rotate(270)
-                self.lcd.image(image, 0, 0)
-            else:
-                disp.image(image)
-                disp.display()
+        # If lcd_present is set to zero
+        # then save to file.
+        self.show_image(image)
+
 
     def show_summary(self, strs, size):
         # Draw some shapes.
@@ -269,26 +226,11 @@ class LCD:
         # Move left to right keeping track of the current x position for drawing shapes.
         x_pad = padding
 
-        if self.version == 2 or self.version == 3:
-            width = self.width
-            height = self.height
-            pixel_size = int(size * 0.5)
-            x_offset = 15
-            image = Image.new("RGB", (width, height), "BLACK")
-        else:
-            # Note you can change the I2C address by passing an i2c_address parameter like:
-            disp = Adafruit_SSD1306.SSD1306_128_64(
-                rst=self.RST, i2c_address=0x3C)
-            # Initialize library.
-            disp.begin()
-            # Clear display.
-            disp.clear()
-            disp.display()
-            # Make sure to create image with mode '1' for 1-bit color.
-            width = disp.width
-            height = disp.height
-            x_offset = 0
-            image = Image.new('1', (width, height))
+        width = self.width
+        height = self.height
+        pixel_size = int(size * 0.5)
+        x_offset = 15
+        image = Image.new("RGB", (width, height), "BLACK")
 
         # Get drawing object to draw on image.
         draw = ImageDraw.Draw(image)
@@ -303,31 +245,20 @@ class LCD:
         # sort array based on 'row' field
         # Write lines of text/icon/qr code.
         for current_str, icon, text_color, icon_color in strs:
-            if (self.version == 2 or self.version == 3):
-                curr_x = x_pad + x_offset
-                # print(curr_x)
-                # normal text
-                draw.text((curr_x, top), current_str,
-                            font=rubik_regular, fill=text_color)
-                curr_x += (len(current_str)+1) * pixel_size
-                # print(curr_x)
-                # icon
-                #draw.text((curr_x, top), icon, font=font_icon, fill=icon_color)
-                draw.text((self.width - (x_offset + x_pad + 10), top), icon, font=font_icon, fill=icon_color)
-                # add vetical offset
-                top = top + size
+            curr_x = x_pad + x_offset
+            # print(curr_x)
+            # normal text
+            draw.text((curr_x, top), current_str,
+                        font=rubik_regular, fill=text_color)
+            curr_x += (len(current_str)+1) * pixel_size
+            # print(curr_x)
+            # icon
+            #draw.text((curr_x, top), icon, font=font_icon, fill=icon_color)
+            draw.text((self.width - (x_offset + x_pad + 10), top), icon, font=font_icon, fill=icon_color)
+            # add vetical offset
+            top = top + size
         # Display image.
-        if (self.lcd_present == 0):
-            image.save(IMG_OUT)
-        else:
-            if self.version == 3:
-                self.lcd.image(image, 0, 0)
-            elif self.version == 2:
-                image = image.rotate(270)
-                self.lcd.image(image, 0, 0)
-            else:
-                disp.image(image)
-                disp.display()
+        self.show_image(image)
 
     def set_logo_text(self, text, x=60, y=200, color="red", size=15):
         self.logo_text = text
@@ -336,53 +267,35 @@ class LCD:
         self.logo_text_color = color
         self.logo_text_size = size
 
-    def show_image(self, image):
-        # self.lcd.image(image, 0, 0)
+    def show_image(self, image, x=0, y=0):
         # Display image.
         if (self.lcd_present == 0):
             image.save(IMG_OUT)
         else:
-            if self.version == 3:
-                self.lcd.image(image, 0, 0)
-            elif self.version == 2:
-                image = image.rotate(270)
-                self.lcd.image(image, 0, 0)
-            else:
-                disp.image(image)
-                disp.display()
+            self.lcd.image(image, 0, 0)
         
+    def show_still_image(self, image_file):
+        image = Image.open(image_file)
+        new_size = (240, 240)
+        image = image.resize(new_size)
+        self.lcd.image(image, 0, 0)
 
     def show_logo(self, x=0, y=0):
         if (self.lcd_present == 0):
             with open(TEXT_OUT, 'w') as out:
                 out.write("[UBO LOGO]")
             return
-        if self.version == 2 or self.version == 3:
-            img = DIR + 'ubo_240_240.png'
-            image = Image.open(img)
-            if self.logo_text is not None:
-                rubik_regular = ImageFont.truetype(DIR + 'rubik/Rubik-Bold.ttf',
-                                                   self.logo_text_size)
-                draw = ImageDraw.Draw(image)
-                draw.text((self.logo_text_x, self.logo_text_y), self.logo_text,
-                          # font = rubik_regular, fill = self.logo_text_color)
-                          font=rubik_regular, fill=(255, 255, 255, 255))
-                self.logo_text = None
-            if self.version == 2:
-                image = image.rotate(270)
-            self.lcd.image(image, x, y)
-        else:
-            img = DIR + 'ubo_128_64.png'
-            image = Image.open(img).convert('1')
-            disp = Adafruit_SSD1306.SSD1306_128_64(
-                rst=self.RST, i2c_address=0x3C)
-            disp.begin()
-            # Clear display.
-            disp.clear()
-            disp.display()
-            disp.image(image)
-            disp.display()
-        image.save(IMG_OUT)
+        img = DIR + 'ubo_240_240.png'
+        image = Image.open(img)
+        if self.logo_text is not None:
+            rubik_regular = ImageFont.truetype(DIR + 'rubik/Rubik-Bold.ttf',
+                                                self.logo_text_size)
+            draw = ImageDraw.Draw(image)
+            draw.text((self.logo_text_x, self.logo_text_y), self.logo_text,
+                        # font = rubik_regular, fill = self.logo_text_color)
+                        font=rubik_regular, fill=(255, 255, 255, 255))
+            self.logo_text = None
+        self.show_image(image, x, y)
 
     def show_menu(self, title, menu_items):
         # get a font [[MAYBE SET THE FONT GLOBALLY TOGETHER WITH BRANDING ASSETS]]

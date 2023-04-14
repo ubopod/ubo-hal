@@ -4,8 +4,8 @@ Before=hardware-test.service
 
 [Service]
 User=root
-Environment=/home/pi/.local/lib/python3.9/site-packages/
-ExecStart=/usr/bin/python3 /home/pi/ubo-sdk/rgb_ring/rgb_ring_manager.py
+Environment=PYTHONPATH=/home/pi/ubo-venv/lib/python3.9/site-packages/
+ExecStart=/home/pi/ubo-venv/bin/python3 /home/pi/ubo-sdk/rgb_ring/rgb_ring_manager.py
 KillMode=control-group
 Restart=on-failure
 RestartPreventExitStatus=255

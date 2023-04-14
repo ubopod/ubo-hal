@@ -165,5 +165,7 @@ cython_debug/
 
 
 # Project specific ignores
-setup/hats
-setup/seeed-voicecard/
+system/setup/hats
+system/setup/seeed-voicecard/
+system/setup/dtc.sh
+system/log/error.log
