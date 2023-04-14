@@ -25,7 +25,7 @@ in file `/etc/modprobe.d/snd-blacklist.conf`
 
 3. Lastly `rgb-ring.service` must be added to system services and enabled 
 to run at bootup. This is done in `system/setup/start_services.sh` script that runs 
-during installtion pricess.
+during installation process.
 
 ```
 sudo cp rgb-ring.service /etc/systemd/system/
@@ -36,6 +36,14 @@ sudo systemctl enable rgb-ring
 You can run the above line by: 
 
 `sudo bash system/setup/start_services.sh`
+
+## Diagram 
+
+<img
+  src="ubo_rgb_ring.jpg"
+  alt="RGB Ring Client/Manager Communication"
+  title="Client to Server/Manager Communication"
+  style="display: inline-block; margin: 0 auto; max-width: 200px">
 
 ## Permission model
 
@@ -49,32 +57,45 @@ We are improving permission managment currently. (TODO)
 
 ## Built-in RGB ring display patterns and primitives
 
+### LED Client Class 
+
 To show patterns on the RGB LED ring, you must first import LEDClient class:
 
 `from rgb_ring_client import LEDClient`
+
+### LED Client Object
 
 then instantiate a new client object:
 
 `lc = LEDClient()`
 
+### LED Client enable/disable
+
 To enable or disable the client, run:
 
 `lc.set_enabled(True) #False`
 
+### All LEDs to specified Color
 
 To sets all LEDs to the specified color:
 
 `lc.set_all(color=(0, 127, 0))`
 
+### All LEDs off 
+
 To turn off all LEDs:
 
 `lc.blank()`
+
+### Set LED Brightness
 
 To set brightness to a specific level 
 between 0 and 1 where 0 means darkness 
 and 1 mmeans maxumum brightness:
 
 `lc.set_brightness(0.5)`
+
+### Fill up the Ring 
 
 Fill up the ring from the first LED 
 up to the specific LED index
@@ -84,7 +105,10 @@ lc.fill_upto(color = (255,255,255),
             percentage = 0.5,
             wait = 100)
 ```
-Fill up the ring from the first LED 
+
+### Fill Down the ring
+
+Fill down the ring from the first LED 
 up to the specific LED index
 
 ```
@@ -93,12 +117,15 @@ lc.fill_downfrom(color = (255,255,255),
             wait = 100)
 ```
 
+### Display Rainbow
+
 Glows the LEDs in a rainbow pattern
 percentage: is a float between 0 and 1
 wait: is in milliseconds
 
 `lc.rainbow(rounds=10, wait=5)`
 
+### bright strip step
 increments the position of bright strip by one step.
 
 `lc.progress_wheel_step(color=(0, 255, 0))`
@@ -117,8 +144,4 @@ lc.spinning_wheel(color = (255,255,255),
                 length = 10, #leds
                 repetitions = 3)
 ```    
-
-# 
-
-rgb_ring_example.py
 

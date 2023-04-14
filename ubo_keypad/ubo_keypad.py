@@ -13,27 +13,26 @@ import sys
 SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
 sys.path.append(SDK_HOME_PATH)
 
-# above line is needed for following classes:
-# from led_client import LEDClient  # noqa E402 need up_dir first
-# from lcd import LCD as LCD  # noqa E402 need up_dir first
-try:
-    from self.configparser import configparser
-except ImportError:
-    import configparser
-
+# try:
+#     from self.configparser import configparser
+# except ImportError:
+#     import configparser
 
 # CONFIG_FILE = './config/config.ini'
 # STATUS_FILE = './info/status.ini'
 LOG_CONFIG = SDK_HOME_PATH + "system/log/logging-debug.ini"
 logging.config.fileConfig(LOG_CONFIG,
                           disable_existing_loggers=False)
-INT_EXPANDER = 5
-# BUTTONS = ["0", "1", "2", "up", "down", "back", "home", "mic"]
-
+INT_EXPANDER = 5 # GPIO PIN index that receives interrupt from AW9523
 
 class KEYPAD(object):
 
     def __init__(self):
+        """
+        KEYPAD Constructor
+        This initializes various parameters including
+        loggers and button names.
+        """
         # self.config = configparser.ConfigParser()
         # self.config.read(CONFIG_FILE)
         # self.status = configparser.ConfigParser()
@@ -50,6 +49,13 @@ class KEYPAD(object):
         self.model = "aw9523"
         self.init_i2c()
         self.enabled = True
+        # "0": Top left button
+        # "1": Middle left button 
+        # "2": Bottom left button
+        # "back": Button with back arrow label (under LCD)
+        # "home": Button with home label (Under LCD)
+        # "up": Right top button with upward arrow label
+        # "down": Right bottom button with downward arrow label
         self.BUTTONS = ["0", "1", "2", "up", "down", "back", "home", "mic"]
         self.index = 0
         self.buttonPressed = self.BUTTONS[self.index]
@@ -69,12 +75,16 @@ class KEYPAD(object):
             self.logger.error("Failed to initialized I2C Bus on address 0x58")
             self.logger.error(e)
             return
+        
+        # Perform soft reset of the expander
         self.aw.reset()
-        # print("Inputs: {:016b}".format(self.aw.inputs))
+        # Set first 8 low significant bits 
+        # (register 1) to input
         self.aw.directions = 0xff00
-        # self.aw.outputs = 0x0000
         time.sleep(1)
-        # first write to both registers to reset the interrupt flag
+        # The code below, accessing the GPIO expander registers directly via i2c 
+        # was created as a workaround of the reset the interrupt flag.
+        # First write to both registers to reset the interrupt flag
         buffer = bytearray(2)
         buffer[0] = 0x00
         buffer[1] = 0x00
@@ -111,8 +121,7 @@ class KEYPAD(object):
         new_i2c.write_then_readinto(buffer, buffer, out_end=1, in_start=1)
         #print(buffer)
         time.sleep(0.1)
-        # _inputs = self.aw.inputs
-        # print("Inputs: {:016b}".format(_inputs))
+
         for i in range(1):
             self.last_inputs = self.aw.inputs
             self.logger.debug("Inputs: {:016b}".format(self.last_inputs))
@@ -125,13 +134,25 @@ class KEYPAD(object):
         #GPIO.add_event_detect(INT_EXPANDER, GPIO.BOTH, callback=self.key_press_cb, bouncetime=200)
 
     def key_press_cb(self,channel):
-        #read inputs
+        # This is callback funtion that gets triggers
+        # if any change is detected on keypad buttons 
+        # States. In this callback, we look at the state
+        # change to see which button was pressed.
         self.last_inputs = self.aw.inputs
         self.logger.debug("Inputs: {:016b}".format(self.last_inputs))
         inputs = 127 - self.last_inputs & 0x7F
         # if input is 0, then only look at microphone
         # switch state change
         if inputs == 0:
+            """
+            When we reach this part of the code, it means
+            some changes in GPIO expander triggered an
+            interrupt but it was not due to a press on 
+            any of the keypad buttons. Here we see
+            if the interrupt was due to the change in
+            microphone muute switch status. Other non
+            keypad button events must also be handled here.
+            """
             self.logger.debug("no keypad change")
             if ((self.last_inputs & 0x80) == 0) and \
                 (self.mic_switch_status == True):
@@ -152,7 +173,7 @@ class KEYPAD(object):
             self.index = 500 #invalid index
             return
         self.index = (int)(math.log2(inputs))
-        print("index is " + str(self.index))
+        self.logger.info("index is " + str(self.index))
         if inputs > -1:
             self.buttonPressed = self.BUTTONS[self.index]
             self.button_event()

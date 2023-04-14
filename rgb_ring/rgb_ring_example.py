@@ -1,5 +1,14 @@
 from rgb_ring_client import LEDClient
 import time
+import os
+import sys
+import logging.config
+
+SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../' 
+sys.path.append(SDK_HOME_PATH)
+LOG_CONFIG = SDK_HOME_PATH + 'system/log/logging-debug.ini'
+logging.config.fileConfig(LOG_CONFIG, disable_existing_loggers=False)
+logger = logging.getLogger('root')
 
 # Instantiate an LED Ring client
 lc = LEDClient()
@@ -8,14 +17,16 @@ lc.set_enabled(True)
 # Set all LEDs to white color
 lc.set_all(color=(255, 255, 255))
 time.sleep(1)
-print("White ring must glow for 1 second")
+#print("White ring must glow for 1 second")
+logger.info('White ring must glow for 1 second')
 
 # This line will disable the LED
 # ring and sending any commands after that
 # does not have an effect 
 lc.set_enabled(False)
 lc.set_all((255, 0, 0))
-print("red ring must NOT glow for 1 second")
+#print("red ring must NOT glow for 1 second")
+logger.info('red ring must NOT glow for 1 second')
 time.sleep(1)
 # enabling RGB LED ring again
 lc.set_enabled(True)

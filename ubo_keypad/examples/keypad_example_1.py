@@ -2,8 +2,11 @@ import time
 import os
 import sys
 
-SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
+SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../../'
 sys.path.append(SDK_HOME_PATH)
+
+up_dir = os.path.dirname(os.path.abspath(__file__)) + '/../'
+sys.path.append(up_dir)
 
 from display.lcd import LCD as LCD
 from ubo_keypad import * # Might have to revisit this form of import
@@ -38,6 +41,7 @@ def main():
         # loop until all keypad buttons are pressed
         while (not all(keypad.buttons.values())): 
             time.sleep(1)
+        lcd.indicate_buttons("Press all", "green", buttons=keypad.buttons)
 
 
 if __name__ == '__main__':

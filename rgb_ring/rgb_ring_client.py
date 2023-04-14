@@ -31,6 +31,7 @@ class LEDClient:
             try:
                 self.client.connect(LM_SOCKET_PATH)
             except Exception as e:
+                logger.error("rgb_ring_manager service is down. run sudo systemctl start rgb_ring_manager")
                 print("rgb_ring_manager service is down. run sudo systemctl start rgb_ring_manager" )
                 return
 

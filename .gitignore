@@ -168,3 +168,4 @@ cython_debug/
 system/setup/hats
 system/setup/seeed-voicecard/
 system/setup/dtc.sh
+system/log/error.log

@@ -3,8 +3,11 @@ import os
 import sys
 import json
 
-SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
+SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../../'
 sys.path.append(SDK_HOME_PATH)
+
+up_dir = os.path.dirname(os.path.abspath(__file__)) + '/../'
+sys.path.append(up_dir)
 
 from display.lcd import LCD as LCD
 from ubo_keypad import * # Might have to revisit this form of import
@@ -20,11 +23,11 @@ class state_machine(KEYPAD):
         if self.state_index == 0:
             if self.buttonPressed=="1": #YES  
                 lcd.display([(1,"Yes",0,"green"), (2,"was",0,"white"), (3,"selected",0,"white")], 20)
-                time.sleep(2)
+                time.sleep(1)
                 self.prompt()
             if self.buttonPressed=="2": #NO
                 lcd.display([(1,"No",0,"red"), (2,"was",0,"white"), (3,"selected",0,"white")], 20)
-                time.sleep(2)
+                time.sleep(1)
                 self.prompt()
             if self.buttonPressed=="home":
                 lcd.display([(1,"Bye",0,"white"), (2,"Bye",0,"red"), (3,"Friend",0,"green")], 20)
