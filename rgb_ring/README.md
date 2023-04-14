@@ -43,7 +43,7 @@ You can run the above line by:
   src="ubo_rgb_ring.jpg"
   alt="RGB Ring Client/Manager Communication"
   title="Client to Server/Manager Communication"
-  style="display: inline-block; margin: 0 auto; max-width: 300px">
+  style="display: inline-block; margin: 0 auto; max-width: 200px">
 
 ## Permission model
 
