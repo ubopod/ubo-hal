@@ -37,6 +37,10 @@ You can run the above line by:
 
 `sudo bash system/setup/start_services.sh`
 
+## Diagram 
+
+![ubo rgb-ring](ubo_rgb_ring.jpg)
+
 ## Permission model
 
 Only applications that belong to the user group that have write permission to the 
