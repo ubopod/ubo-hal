@@ -39,7 +39,11 @@ You can run the above line by:
 
 ## Diagram 
 
-![ubo rgb-ring](ubo_rgb_ring.jpg)
+<img
+  src="ubo_rgb_ring.jpg"
+  alt="RGB Ring Client/Manager Communication"
+  title="Client to Server/Manager Communication"
+  style="display: inline-block; margin: 0 auto; max-width: 500px">
 
 ## Permission model
 
