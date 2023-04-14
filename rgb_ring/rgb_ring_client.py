@@ -87,7 +87,7 @@ class LEDClient:
         self.send("rainbow " + 
                 str(rounds) + " " +
                 str(wait))
-zorglub
+
     def progress_wheel_step(self, color = (255,255,255)):
         '''
         increments the position of bright strip by one step.
