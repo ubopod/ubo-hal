@@ -32,6 +32,12 @@ sudo apt install ir-keytable
 ######################################
 sudo cp $UBO_HOME/system/boot/config.txt /boot/config.txt
 sudo cp $UBO_HOME/system/etc/modprobe.d/snd-blacklist.conf /etc/modprobe.d/snd-blacklist.conf
+
+#######################################
+# Create Users and Groups
+######################################
+sudo /bin/bash ./create_users_and_groups.sh
+
 #######################################
 # Add systemd services
 ######################################
