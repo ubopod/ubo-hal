@@ -70,6 +70,7 @@ then instantiate a new client object:
 `lc = LEDClient()`
 
 ### LED Client enable/disable
+Enables or disables the LED ring
 
 To enable or disable the client, run:
 
@@ -77,7 +78,7 @@ To enable or disable the client, run:
 
 ### All LEDs to specified Color
 
-To sets all LEDs to the specified color:
+To sets all LEDs in the ring to the specified color:
 
 `lc.set_all(color=(0, 127, 0))`
 
@@ -119,6 +120,7 @@ lc.fill_downfrom(color = (255,255,255),
 
 ### Display Rainbow
 
+Activate a rainbow on the LED ring
 Glows the LEDs in a rainbow pattern
 percentage: is a float between 0 and 1
 wait: is in milliseconds
