@@ -3,6 +3,7 @@
 #set -x
 
 UBO_USER=ubo
+PI_USER=pi
 UBO_PASSWD=password
 RGBLED_GROUP=rgbled
 
@@ -25,4 +26,6 @@ else
    sudo useradd -m -p $(openssl passwd -1 $UBO_PASSWD) -G $RGBLED_GROUP $UBO_USER
 fi
 
+# Add pi user to rgbled group
+sudo usermod -a -G $RGBLED_GROUP $PI_USER  
 

@@ -360,8 +360,8 @@ if __name__ == '__main__':
     # this is changing the group to pi
     # it makes sense to make a dedicated rgb-ring group
     # and add pi as user to that group 
-    uid = pwd.getpwnam("root").pw_uid
-    gid = grp.getgrnam("pi").gr_gid
+    uid = pwd.getpwnam("pi").pw_uid
+    gid = grp.getgrnam("rgbled").gr_gid
     os.chown(LM_SOCKET_PATH, uid, gid)
 
     print("LED Manager Listening...")
