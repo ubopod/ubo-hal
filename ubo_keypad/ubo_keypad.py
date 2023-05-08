@@ -1,3 +1,6 @@
+# import required libraries. 
+# the corresponding module have normarlly been installed when 
+# the system was setup ( see requirement file in system/setup)
 import RPi.GPIO as GPIO
 from adafruit_bus_device import i2c_device
 import adafruit_aw9523
@@ -10,6 +13,7 @@ import signal
 import os
 import sys
 
+# Set the SDK homew path and append it to sys.path
 SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
 sys.path.append(SDK_HOME_PATH)
 
@@ -18,14 +22,22 @@ sys.path.append(SDK_HOME_PATH)
 # except ImportError:
 #     import configparser
 
+# Set the logging configuration file 
+
 # CONFIG_FILE = './config/config.ini'
 # STATUS_FILE = './info/status.ini'
+
 LOG_CONFIG = SDK_HOME_PATH + "system/log/logging-debug.ini"
 logging.config.fileConfig(LOG_CONFIG,
                           disable_existing_loggers=False)
+# Define the GPIO PIN index that receives the interrupt
 INT_EXPANDER = 5 # GPIO PIN index that receives interrupt from AW9523
 
 class KEYPAD(object):
+    """
+    Class that represents a KEYPAD Object and defines
+    its properties and methods
+    """
 
     def __init__(self):
         """
@@ -37,7 +49,11 @@ class KEYPAD(object):
         # self.config.read(CONFIG_FILE)
         # self.status = configparser.ConfigParser()
         # self.status.read(STATUS_FILE)
+
+        # Initialize the logger object
         self.logger = logging.getLogger("keypad")
+
+        # Initialize the display status and window stack
         self.display_active = False
         self.window_stack = []
         self.led_enabled = True
@@ -62,11 +78,16 @@ class KEYPAD(object):
 
 
     def init_i2c(self):
+        """
+        Initialize the I2C bus and the GPIO PIN index 
+        for interrupt from AW9523
+        """
         GPIO.setmode(GPIO.BCM)
         i2c = board.I2C()
         # Set this to the GPIO of the interrupt:
         GPIO.setup(INT_EXPANDER, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         try:
+            # Try initializing the AW9523 device
             self.aw = adafruit_aw9523.AW9523(i2c, 0x58)
             new_i2c = i2c_device.I2CDevice(i2c, 0x58)
             self.bus_address = "0x58"
@@ -78,10 +99,12 @@ class KEYPAD(object):
         
         # Perform soft reset of the expander
         self.aw.reset()
+
         # Set first 8 low significant bits 
         # (register 1) to input
         self.aw.directions = 0xff00
         time.sleep(1)
+
         # The code below, accessing the GPIO expander registers directly via i2c 
         # was created as a workaround of the reset the interrupt flag.
         # First write to both registers to reset the interrupt flag
@@ -92,22 +115,26 @@ class KEYPAD(object):
         new_i2c.write_then_readinto(buffer, buffer, out_end=1, in_start=1)
         #print(buffer)
         time.sleep(0.1)
+
         buffer[0] = 0x01
         buffer[1] = 0x00
         new_i2c.write(buffer)
         new_i2c.write_then_readinto(buffer, buffer, out_end=1, in_start=1)
         #print(buffer)
+ 
         # disable interrupt for higher bits
         buffer[0] = 0x06
         buffer[1] = 0x00
         new_i2c.write(buffer)
         new_i2c.write_then_readinto(buffer, buffer, out_end=1, in_start=1)
         #print(buffer)
+
         buffer[0] = 0x07
         buffer[1] = 0xff
         new_i2c.write(buffer)
         new_i2c.write_then_readinto(buffer, buffer, out_end=1, in_start=1)
         #print(buffer)
+
         # read registers again to reset interrupt
         buffer[0] = 0x00
         buffer[1] = 0x00
@@ -115,12 +142,14 @@ class KEYPAD(object):
         new_i2c.write_then_readinto(buffer, buffer, out_end=1, in_start=1)
         #print(buffer)
         time.sleep(0.1)
+
         buffer[0] = 0x01
         buffer[1] = 0x00
         new_i2c.write(buffer)
         new_i2c.write_then_readinto(buffer, buffer, out_end=1, in_start=1)
         #print(buffer)
         time.sleep(0.1)
+
 
         for i in range(1):
             self.last_inputs = self.aw.inputs
