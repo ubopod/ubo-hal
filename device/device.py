@@ -5,6 +5,7 @@ import os
 import sys
 import random
 import re
+from time import sleep
 
 SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
 sys.path.append(SDK_HOME_PATH)
@@ -52,6 +53,7 @@ class Device(object):
     def set_hostname(self, new_hostname):
         try:
             subprocess.run(["sudo", "hostnamectl", "set-hostname", new_hostname], check=True)
+            subprocess.run(["sudo", "sed", "-i", f"s/127.0.1.1.*/127.0.1.1\t{new_hostname}/", "/etc/hosts"], check=True)
             self.logger.debug("Hostname changed successfully.")
         except subprocess.CalledProcessError as e:
             self.logger.debug(f"Error occurred while changing hostname: {e}")
@@ -60,7 +62,8 @@ class Device(object):
         current_hostname = self.get_current_hostname()
         if current_hostname == self.default_hostname:
             self.new_hostname = "ubo-" + str(random.randint(100, 999))
-            set_hostname(self.new_hostname)
+            self.set_hostname(self.new_hostname)
+            self.logger.debug("New hostname is: " + self.new_hostname)
         else:
             self.logger.debug("Hostname is already different from the default hostname.")
 
@@ -86,7 +89,8 @@ class Device(object):
             command = ["/home/pi/code-insiders", "tunnel", "--accept-server-license-terms", "--name", hostname]
             with open(output_file, "w") as file:
                 subprocess.Popen(command, stdout=file, stderr=subprocess.STDOUT)
-            self.logger.debug("Tunnel started successfully.")
+                sleep(5)
+                self.logger.debug("Tunnel started successfully.")
             return self.extract_device_code(filename = 'device_code_temp.txt')
         except subprocess.CalledProcessError as e:
             self.logger.debug(f"Error occurred while runing the tunnel: {e}")
