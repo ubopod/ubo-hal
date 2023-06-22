@@ -3,6 +3,8 @@ import subprocess
 import logging.config
 import os
 import sys
+import random
+import re
 
 SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
 sys.path.append(SDK_HOME_PATH)
@@ -54,6 +56,42 @@ class Device(object):
         except subprocess.CalledProcessError as e:
             self.logger.debug(f"Error occurred while changing hostname: {e}")
 
+    def update_hostname(self):
+        current_hostname = self.get_current_hostname()
+        if current_hostname == self.default_hostname:
+            self.new_hostname = "ubo-" + str(random.randint(100, 999))
+            set_hostname(self.new_hostname)
+        else:
+            self.logger.debug("Hostname is already different from the default hostname.")
+
+    def extract_device_code(self, filename = 'device_code_temp.txt'):
+        '''
+        Function to extract device code from text
+        '''
+        with open(filename, 'r') as file:
+            text = file.read()
+        pattern = r'use code (\w{4}-\w{4})'
+        match = re.search(pattern, text)
+        if match:
+            return match.group(1)
+        else:
+            return None
+
+    def run_vscode_tunnel(self, hostname):
+        '''
+        run vscode tunnel and return code for authentication
+        '''
+        output_file = "./device_code_temp.txt"
+        try:
+            command = ["/home/pi/code-insiders", "tunnel", "--accept-server-license-terms", "--name", hostname]
+            with open(output_file, "w") as file:
+                subprocess.Popen(command, stdout=file, stderr=subprocess.STDOUT)
+            self.logger.debug("Tunnel started successfully.")
+            return self.extract_device_code(filename = 'device_code_temp.txt')
+        except subprocess.CalledProcessError as e:
+            self.logger.debug(f"Error occurred while runing the tunnel: {e}")
+            return False
+
 def main():
     device = Device()
     # check hostname and update if first time booting up
@@ -74,6 +112,9 @@ def main():
 
     current_hostname = device.get_current_hostname()
     device.logger.debug(current_hostname)
+
+    code = device.run_vscode_tunnel('ubo-remote-2')
+    device.logger.debug(code)
 
 
 if __name__ == '__main__':
