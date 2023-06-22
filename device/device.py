@@ -74,9 +74,13 @@ class Device(object):
         with open(filename, 'r') as file:
             text = file.read()
         pattern = r'use code (\w{4}-\w{4})'
+        pattern_connected = r'Connected to an existing tunnel' + "|" + r'Open this link in your browser'
         match = re.search(pattern, text)
+        match_connected = re.search(pattern_connected, text)
         if match:
             return match.group(1)
+        if match_connected:
+            return "Connected"
         else:
             return None
 
@@ -91,7 +95,15 @@ class Device(object):
                 subprocess.Popen(command, stdout=file, stderr=subprocess.STDOUT)
                 sleep(5)
                 self.logger.debug("Tunnel started successfully.")
-            return self.extract_device_code(filename = 'device_code_temp.txt')
+                retries = 4
+                code = None
+                while ((code is None) and (retries > 0)): 
+                    self.logger.debug("retrying to parse code...")
+                    self.logger.debug(code)
+                    code = self.extract_device_code(filename = 'device_code_temp.txt')
+                    retries = retries - 1
+                    sleep(4)
+                return code
         except subprocess.CalledProcessError as e:
             self.logger.debug(f"Error occurred while runing the tunnel: {e}")
             return False

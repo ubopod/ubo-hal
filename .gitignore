@@ -170,3 +170,4 @@ system/setup/seeed-voicecard/
 system/setup/dtc.sh
 system/log/error.log
 device/device_code_temp.txt
+device_code_temp.txt

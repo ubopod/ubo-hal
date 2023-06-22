@@ -24,7 +24,7 @@ def main():
         sleep(1)
     device.logger.debug("Internet connection is now available.")
     lcd.display([(1,"Internet",0,"white"),(2,"detected!",0,"white")],24)
-    sleep(1)
+    sleep(2)
     # write Internet connection detected pn LCD
     # start vscode tunnel and get access code
     # show IP address, hostname, device code on LCD
@@ -33,6 +33,7 @@ def main():
     current_hostname = device.get_current_hostname()
     device.logger.debug(current_hostname)
     # run vscode tunnel
+    lcd.display([(1,"Establishing",0,"white"),(2,"Tunnel...",0,"white")],24)
     code = device.run_vscode_tunnel(current_hostname + '-remote')
     device.logger.debug(code)
     lcd.display([(1,"Code:" ,0,"white"), (2, str(code) ,0,"white"), 
