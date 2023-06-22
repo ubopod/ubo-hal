@@ -82,3 +82,4 @@ arm_boost=1
 [all]
 dtoverlay=i2s-mmap
 dtparam=i2s=on
+dtoverlay=gpio-fan,gpiopin=22,temp=60000
