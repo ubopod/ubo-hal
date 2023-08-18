@@ -52,8 +52,11 @@ class Device(object):
 
     def set_hostname(self, new_hostname):
         try:
-            subprocess.run(["sudo", "hostnamectl", "set-hostname", new_hostname], check=True)
-            subprocess.run(["sudo", "sed", "-i", f"s/127.0.1.1.*/127.0.1.1\t{new_hostname}/", "/etc/hosts"], check=True)
+            subprocess.run(["sudo", "hostnamectl", 
+                            "set-hostname", new_hostname], check=True)
+            subprocess.run(["sudo", "sed", "-i", 
+                            f"s/127.0.1.1.*/127.0.1.1\t{new_hostname}/", 
+                            "/etc/hosts"], check=True)
             self.logger.debug("Hostname changed successfully.")
         except subprocess.CalledProcessError as e:
             self.logger.debug(f"Error occurred while changing hostname: {e}")
@@ -65,7 +68,8 @@ class Device(object):
             self.set_hostname(self.new_hostname)
             self.logger.debug("New hostname is: " + self.new_hostname)
         else:
-            self.logger.debug("Hostname is already different from the default hostname.")
+            self.logger.debug("Hostname is already different \
+                              from the default hostname.")
 
     def extract_device_code(self, filename = 'device_code_temp.txt'):
         '''
@@ -74,7 +78,8 @@ class Device(object):
         with open(filename, 'r') as file:
             text = file.read()
         pattern = r'use code (\w{4}-\w{4})'
-        pattern_connected = r'Connected to an existing tunnel' + "|" + r'Open this link in your browser'
+        pattern_connected = r'Connected to an existing tunnel' \
+                            + "|" + r'Open this link in your browser'
         match = re.search(pattern, text)
         match_connected = re.search(pattern_connected, text)
         if match:
@@ -89,10 +94,19 @@ class Device(object):
         run vscode tunnel and return code for authentication
         '''
         output_file = "./device_code_temp.txt"
+        # my_env = os.environ.copy()
+        # my_env["VSCODE_CLI_USE_FILE_KEYRING"] = "1"
+
         try:
-            command = ["/home/pi/code-insiders", "tunnel", "--accept-server-license-terms", "--name", hostname]
+            command = ["/home/pi/code-insiders", 
+                       "tunnel", 
+                       "--accept-server-license-terms", 
+                       "--name", hostname]
             with open(output_file, "w") as file:
-                subprocess.Popen(command, stdout=file, stderr=subprocess.STDOUT)
+                subprocess.Popen(command, 
+                                stdout=file, 
+                                stderr=subprocess.STDOUT) 
+                                #env=my_env)
                 sleep(5)
                 self.logger.debug("Tunnel started successfully.")
                 retries = 4
@@ -122,9 +136,6 @@ def main():
     # show IP address, hostname, device code on LCD
     local_ip_address = device.get_local_ip()
     device.logger.debug("Local IP address:" + str(local_ip_address))
-
-    default_hostname = "raspberrypi"
-    new_hostname = "newhostname"
 
     current_hostname = device.get_current_hostname()
     device.logger.debug(current_hostname)
