@@ -27,7 +27,7 @@ INT_EXPANDER = 5 # GPIO PIN index that receives interrupt from AW9523
 
 class KEYPAD(object):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """
         KEYPAD Constructor
         This initializes various parameters including
