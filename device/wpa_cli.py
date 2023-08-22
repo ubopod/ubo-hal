@@ -16,6 +16,9 @@ examples of cli commands:
 > wpa_cli set_network id key_mgmt NONE # set key_mgmt for OPEN
 > wpa_cli set_network id wep_key '"example_password"' # set password for WEP
 > wpa_cli log_level DEBUG # -> sets log level to debug
+
+For more information on wpa_cli commands, see:
+https://www.qnx.com/developers/docs/6.5.0SP1.update/com.qnx.doc.neutrino_utilities/w/wpa_cli.html
 """
 
 import subprocess
