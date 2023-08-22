@@ -1,3 +1,10 @@
+from pyzbar.pyzbar import decode
 from picamera2 import Picamera2
+
 picam2 = Picamera2()
-picam2.start_and_capture_file("test.jpg")
+barcodes = []
+picam2.start()
+while True:
+    rgb = picam2.capture_array("main")
+    barcodes = decode(rgb)
+    print(barcodes)
