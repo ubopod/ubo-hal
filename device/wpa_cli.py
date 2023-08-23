@@ -23,7 +23,7 @@ https://www.qnx.com/developers/docs/6.5.0SP1.update/com.qnx.doc.neutrino_utiliti
 
 import subprocess
 from typing import Literal, Union
-import logging
+import logging.config
 from time import sleep
 import os
 import sys
