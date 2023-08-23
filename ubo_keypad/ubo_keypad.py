@@ -7,7 +7,7 @@ import math
 import time
 import os
 import sys
-from typing import Literal
+from typing import Literal, Union
 
 SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
 sys.path.append(SDK_HOME_PATH)
@@ -34,10 +34,14 @@ class ButtonStatus:
         "up", "down", "back", "home", "mic"
     ]
 
+    # TODO: find a less repetitive way to do this
     BUTTON_NAMES_TYPE = Literal[
         "top-left", "middle-left", "bottom-left",
         "up", "down", "back", "home", "mic"
     ]
+
+    buttonPressed: Union[BUTTON_NAMES_TYPE, None]
+    event_type: Literal["pressed", "released"]
 
     def __init__(self):
         self.buttons = {
@@ -92,7 +96,6 @@ class Keypad:
         self.enabled = True
         self.buttons = ButtonStatus()
         self.index = 0
-        self.buttonPressed = None
         self.init_i2c()
 
     def clear_interrupt_flags(self, i2c):
@@ -218,13 +221,16 @@ class Keypad:
                                                                 held_down_time))
             
             self.buttons.update_status(self.button_label, "released")
+            self.buttons.buttonPressed = None
+            self.buttons.event_type = "released"
 
         else:
             self.logger.info("Pressed: button {} with label {}.".format(
                                                     str(self.index),
                                                     self.button_label
                                                     ))
-            self.buttonPressed = self.button_label
+            self.buttons.buttonPressed = self.button_label
+            self.buttons.event_type = "pressed"
             self.buttons.update_status(self.button_label, "pressed")        
             
 
