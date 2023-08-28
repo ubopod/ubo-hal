@@ -308,24 +308,3 @@ class wifiManager(WpaCliWrapper):
         except Exception as e: 
             self.logger.error(f'Error forgetting wifi: {e}')
             return False
-        
-
-if __name__ == '__main__':
-
-    W = wifiManager()
-    ssid='earlplex-guest'
-    password='hammerearlplex'
-    psk = W.generate_passphrase(ssid, password)
-    # id = W.add_wifi(ssid, password, type='WPA')
-    id = W.add_wifi(ssid='earlplex-guest', psk=psk, type='WPA')
-    
-    if id:
-        R = W.connect_to_wifi(id)
-        W.logger.info("wifi connected: " + str(R))
-    else:
-        forgot = W.forget_wifi('earlplex-guest')
-        if forgot:
-            W.logger.info("network forgotten")
-        else:
-            W.logger.info("network not removed")
-
