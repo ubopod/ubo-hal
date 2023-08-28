@@ -9,8 +9,8 @@ from rgb_ring.rgb_ring_client import LEDClient
 
 LED_RING = LEDClient()
 W = wifiManager()
-ssid='earlplex-guest'
-password='hammerearlplex'
+ssid='example_ssid'
+password='example_password'
 psk = W.generate_passphrase(ssid, password)
 # id = W.add_wifi(ssid, password, type='WPA')
 LED_RING.spinning_wheel(color = (255,255,255), 
