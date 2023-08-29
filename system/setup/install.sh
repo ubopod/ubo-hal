@@ -3,10 +3,13 @@ UBO_HOME=/home/pi/ubo-sdk
 export PATH=$PATH:~/.local/bin
 
 ###### Install debian packages ######
-sudo apt install -y python3-pyaudio portaudio19-dev python-all-dev libpcap-dev build-essential 
+sudo apt install -y python3-pyaudio portaudio19-dev python-all-dev libpcap-dev build-essential python3-alsaaudio
 
 ######### Install python package ====
-python3 -m venv ~/ubo-venv
+#change following line to include system packages
+# --system-site-packages: Give the virtual environment 
+# access to the system site-packages dir.
+python3 -m venv --system-site-packages ~/ubo-venv
 . /home/pi/ubo-venv/bin/activate
 python3 -m pip install --upgrade pip
 pip3 install --upgrade pip
