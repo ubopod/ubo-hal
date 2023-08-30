@@ -10,7 +10,7 @@ sys.path.append(SDK_HOME_PATH)
 up_dir = os.path.dirname(os.path.abspath(__file__)) + '/../'
 sys.path.append(up_dir)
 
-from device.wpa_cli import wifiManager
+from device.wifi_manager import wifiManager
 
 picam2 = Picamera2()
 wifi = wifiManager()
