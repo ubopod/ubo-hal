@@ -9,7 +9,7 @@ sys.path.append(SDK_HOME_PATH)
 up_dir = os.path.dirname(os.path.abspath(__file__)) + '/../'
 sys.path.append(up_dir)
 
-from .wpa_cli import WpaCliWrapper
+from wpa_cli import WpaCliWrapper
 
 
 class wifiManager(WpaCliWrapper):
