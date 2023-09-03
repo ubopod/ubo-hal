@@ -12,7 +12,7 @@ from rgb_ring.rgb_ring_client import LEDClient
 from audio.audio_manager import AudioManager
 
 # Pin definition
-led_backlight = 17
+led_backlight = 26
 
 # Suppress warnings
 GPIO.setwarnings(False)
@@ -24,6 +24,5 @@ GPIO.setmode(GPIO.BCM)
 # if using a momentary push button without a resistor.
 #GPIO.setup(reset_shutdown_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-# Use Qwiic pHAT's pullup resistor so that the pin is not floating
 GPIO.setup(led_backlight, GPIO.OUT)
 GPIO.output(led_backlight, GPIO.LOW)

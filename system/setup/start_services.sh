@@ -12,7 +12,7 @@ sudo systemctl enable clear-ui
 sudo systemctl restart rgb-ring
 sudo systemctl restart startup-screen
 sudo systemctl restart safe-reboot-shutdown
-sudo systemctl restart clear-ui
+sudo systemctl start clear-ui
 # the following lines are required for PiIR library to work
 # sudo systemctl enable pigpiod
 # sudo systemctl start pigpiod

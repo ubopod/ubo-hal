@@ -47,6 +47,7 @@ from audio.audio_manager import AudioManager
 # Pin definition
 bus_isolation_pin = 17
 reset_shutdown_pin = 27
+led_backlight = 26
 
 
 # Suppress warnings
@@ -62,7 +63,11 @@ GPIO.setmode(GPIO.BCM)
 # Use Qwiic pHAT's pullup resistor so that the pin is not floating
 GPIO.setup(reset_shutdown_pin, GPIO.IN)
 GPIO.setup(bus_isolation_pin, GPIO.OUT)
+GPIO.setup(led_backlight, GPIO.OUT)
+
 GPIO.output(bus_isolation_pin, GPIO.HIGH)
+GPIO.output(led_backlight, GPIO.HIGH)
+
 
 # modular function to restart Pi
 def restart():
@@ -81,7 +86,6 @@ def shut_down():
     process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
     output = process.communicate()[0]
     print(output)
-
 
 
 while True:
