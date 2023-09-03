@@ -62,6 +62,9 @@ https://wiki.seeedstudio.com/ReSpeaker_2_Mics_Pi_HAT_Raspberry/
 
 Google assistant: https://developers.google.com/assistant/sdk/guides/service/python
 
-Alexa: https://github.com/respeaker/avs
+Alexa: 
+https://github.com/respeaker/avs
+https://github.com/ubopod/avs-device-sdk-pi
+
 
 ChatGPT: https://www.hackster.io/devmiser/davinci-the-chatgpt-ai-virtual-assistant-you-can-talk-to-fd00fd

@@ -5,7 +5,7 @@ import os
 import sys
 import time
 import logging
-:
+
 SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../../'
 sys.path.append(SDK_HOME_PATH)
 

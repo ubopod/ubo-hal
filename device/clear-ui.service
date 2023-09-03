@@ -1,0 +1,19 @@
+[Unit]
+Description=Ubo Clear LCD and LED ring
+DefaultDependencies=no
+Before=shutdown.target reboot.target halt.target
+
+[Service]
+User=pi
+Environment=PYTHONPATH=/home/pi/ubo-venv/lib/python3.9/site-packages/
+ExecStart=/bin/true
+ExecStop=/home/pi/ubo-venv/bin/python3 /home/pi/ubo-sdk/device/clear_ui.py
+Type=oneshot
+RemainAfterExit=yes
+
+RuntimeDirectory=ubo/
+WorkingDirectory=/home/pi/ubo-sdk/
+RuntimeDirectoryMode=0755
+
+[Install]
+WantedBy=multi-user.target

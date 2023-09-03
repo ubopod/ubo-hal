@@ -16,10 +16,14 @@ class AudioManager:
         self.volume = 50
         # create an audio object
         # self.p = pyaudio.PyAudio()
-        self.set_volume(self.volume)
         self.is_playing = False
-        self.stop = False
+        self.p = pyaudio.PyAudio()
 
+    def __del__(self):
+        self.p.terminate()
+
+    def stop(self):
+        self.stream.stop_stream()
 
     def play(self, filename):
         """
@@ -30,7 +34,6 @@ class AudioManager:
         filename : str
             Path to wav file
         """
-        self.p = pyaudio.PyAudio()
 
         # if self.is_playing:
         #     # cleanup stuff.
@@ -41,26 +44,32 @@ class AudioManager:
         # self.is_playing = True
         # open the file for reading.
         print('########### Opening file for playback')
-        with wave.open(filename,'rb') as wf:
-            # open stream based on the wave object which has been input.
-            self.stream = self.p.open(format = self.p.get_format_from_width(wf.getsampwidth()),
-                            channels = wf.getnchannels(),
-                            rate = wf.getframerate(),
-                            output = True,
-                            output_device_index = self.RESPEAKER_INDEX)
+        try:
+            with wave.open(filename,'rb') as wf:
+                # open stream based on the wave object which has been input.
+                def callback(in_data, frame_count, time_info, status):
+                    data = wf.readframes(frame_count)
+                    # If len(data) is less than requested frame_count, PyAudio automatically
+                    # assumes the stream is finished, and the stream stops.
+                    return (data, pyaudio.paContinue)
+                self.stream = self.p.open(format = self.p.get_format_from_width(wf.getsampwidth()),
+                                channels = wf.getnchannels(),
+                                rate = wf.getframerate(),
+                                output = True,
+                                output_device_index = self.RESPEAKER_INDEX,
+                                stream_callback=callback)
 
-            # read data (based on the chunk size)
-            data = wf.readframes(self.chunk)
-            # play stream (looping from beginning of file to the end)
-            while data and self.stop == False:
-                # writing to the stream is what *actually* plays the sound.
-                self.stream.write(data)
-                data = wf.readframes(self.chunk)
-            wf.close()
+                while self.stream.is_active():
+                    time.sleep(0.1)
+                # cleanup stuff.
+                self.stream.close()    
+                # self.stop = True
+        except Exception as e:
+            print(e)
             # cleanup stuff.
             self.stream.close()    
-            self.p.terminate()
-            self.stop = False
+            # self.stop = True
+
 
     def set_volume(self, volume=80):
         """
@@ -81,10 +90,14 @@ class AudioManager:
 if __name__ == '__main__':
     A = AudioManager()
     # A.set_volume(80)
-    path = '../chimes/done.wav'
+    path = './scan.wav'
     x = Thread(target=A.play, args=(path,))
     x.start()
-    time.sleep(2)
-    A.stop = True
+    print("hellloooo")
+    time.sleep(3)
+    # force stop
+    A.stop()
+    # need some time after setting the flag to stop the stream
+    time.sleep(0.5)
     x2 = Thread(target=A.play, args=(path,))
     x2.start()

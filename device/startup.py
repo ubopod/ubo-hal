@@ -5,6 +5,7 @@ import sys
 from time import sleep
 import logging
 import time
+from threading import Thread
 
 SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
 sys.path.append(SDK_HOME_PATH)
@@ -13,12 +14,14 @@ from display.lcd import LCD
 from ubo_keypad.ubo_keypad import Keypad 
 from rgb_ring.rgb_ring_client import LEDClient
 from camera.camera_manager import Camera
+from audio.audio_manager import AudioManager
 
 lcd = LCD()
 led_ring = LEDClient()
 camera = Camera()
 wifi = wifiManager()
 device = Device()
+audio = AudioManager()
 
 class my_keypad(Keypad):
     def __init__(self, *args, **kwargs):
@@ -35,6 +38,9 @@ class my_keypad(Keypad):
                 if pressed == "middle-left":
                     lcd.display([(1,"Scan WiFi QRCode",0,"white"), (2, "using the front" ,0,"white"), (3,"camera", 0,"white")], 19)
                     # show led pattern for scanning
+                    path = '/home/pi/ubo-sdk/audio/scan.wav'
+                    x = Thread(target=audio.play, args=(path,))
+                    x.start()
                     led_ring.progress_wheel_step(color = (0,0,255))
                     # scan wifi qr code
                     match = camera.scan_for_wifi_qr_code()
@@ -57,6 +63,10 @@ class my_keypad(Keypad):
                                         password=password, 
                                         type=security_type)
                         if id:
+                            audio.stop()
+                            path = '/home/pi/ubo-sdk/audio/chimes/add.wav'
+                            x = Thread(target=audio.play, args=(path,))
+                            x.start()
                             logging.info("wifi added successfully ")
                             led_ring.spinning_wheel(color = (255,255,255), 
                                         wait = 100,
@@ -65,6 +75,10 @@ class my_keypad(Keypad):
                             R = wifi.connect_to_wifi(id)
                             wifi.logger.info("wifi connected: " + str(R))
                             if R:
+                                audio.stop()
+                                path = '/home/pi/ubo-sdk/audio/chimes/done.wav'
+                                x = Thread(target=audio.play, args=(path,))
+                                x.start()
                                 led_ring.blink(color = (0,255,0), 
                                             wait = 1000, 
                                             repetitions = 1)
