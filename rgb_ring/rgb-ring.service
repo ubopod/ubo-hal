@@ -4,14 +4,14 @@ Before=hardware-test.service
 
 [Service]
 User=root
-Environment=PYTHONPATH=/home/pi/ubo-venv/lib/python3.9/site-packages/
-ExecStart=/home/pi/ubo-venv/bin/python3 /home/pi/ubo-sdk/rgb_ring/rgb_ring_manager.py
+Environment=PYTHONPATH=$UBO_VENV_PATH/lib/python3.11/site-packages/
+ExecStart=$UBO_VENV_PATH/bin/python3 $UBO_SDK_PATH/rgb_ring/rgb_ring_manager.py
 KillMode=control-group
 Restart=on-failure
 RestartPreventExitStatus=255
 Type=simple
 RuntimeDirectory=ubo/
-WorkingDirectory=/home/pi/ubo-sdk/
+WorkingDirectory=$UBO_SDK_PATH
 RuntimeDirectoryMode=0755
 
 [Install]

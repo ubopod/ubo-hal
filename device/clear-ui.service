@@ -6,16 +6,15 @@ Before=shutdown.target
 #Before=umount.target
 #After=final.target
 
-
 [Service]
-User=pi
-Environment=PYTHONPATH=/home/pi/ubo-venv/lib/python3.9/site-packages/
+User=$UBO_USER
+#Environment=PYTHONPATH=$UBO_VENV_PATH/lib/python3.11/site-packages/
 ExecStart=/bin/true  
-ExecStop=/home/pi/ubo-venv/bin/python3 /home/pi/ubo-sdk/device/clear_ui.py > /home/pi/ubo-sdk/device/clear-ui-stop.log 2>&1
+ExecStop=$UBO_VENV_PATH/bin/python3 $UBO_SDK_PATH/device/clear_ui.py > $UBO_SDK_PATH/device/clear-ui-stop.log 2>&1
 Type=oneshot
 RemainAfterExit=yes
-RuntimeDirectory=ubo/
-WorkingDirectory=/home/pi/ubo-sdk/
+#RuntimeDirectory=ubo/
+WorkingDirectory=$UBO_SDK_PATH
 RuntimeDirectoryMode=0755
 
 [Install]
