@@ -7,6 +7,11 @@ export UBO_SDK_PATH=$SDK_INSTALL_PATH/ubo-sdk/
 export UBO_VENV_PATH=$SDK_INSTALL_PATH/ubo-venv/
 export PATH=$PATH:$HOME/.local/bin
 
+# Add enviroment variables to system 
+echo "SDK_INSTALL_PATH=\"$SDK_INSTALL_PATH\"" | sudo tee -a /etc/environment
+echo "UBO_SDK_PATH=\"$UBO_SDK_PATH\"" | sudo tee -a /etc/environment
+echo "UBO_VENV_PATH=\"$UBO_VENV_PATH\"" | sudo tee -a /etc/environment
+
 ###### Install python & debian packages ######
 sudo apt install -y python3-venv python3-dev python3-pyaudio python3-alsaaudio python3-picamera2
 sudo apt install -y espeak libpcap-dev build-essential
