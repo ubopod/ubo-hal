@@ -3,10 +3,16 @@ import logging
 import logging.config
 import socket
 import time
+import sys
 
-SDK_HOME_PATH = "/home/pi/ubo-sdk/"
-LM_SOCKET_PATH = SDK_HOME_PATH + "ledmanagersocket.sock"
-LOG_CONFIG = SDK_HOME_PATH + "system/log/logging-debug.ini"
+
+SDK_INSTALL_PATH = os.environ.get('SDK_INSTALL_PATH', '/home/pi/')
+UBO_SDK_PATH = os.environ.get('UBO_SDK_PATH', '/home/pi/ubo-sdk')
+# UBO_SDK_PATH = SDK_INSTALL_PATH + '/ubo-sdk'
+LM_SOCKET_PATH = UBO_SDK_PATH + "ledmanagersocket.sock"
+LOG_CONFIG = UBO_SDK_PATH + "system/log/logging-debug.ini"
+sys.path.append(UBO_SDK_PATH)
+
 logging.config.fileConfig(LOG_CONFIG,
                           disable_existing_loggers=False)
 

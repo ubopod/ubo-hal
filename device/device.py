@@ -7,10 +7,13 @@ import random
 import re
 from time import sleep
 
-SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
-sys.path.append(SDK_HOME_PATH)
+SDK_INSTALL_PATH = os.environ.get('SDK_INSTALL_PATH', '/home/pi/')
+UBO_SDK_PATH = os.environ.get('UBO_SDK_PATH', '/home/pi/ubo-sdk/')
+# SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
+# UBO_SDK_PATH = SDK_INSTALL_PATH + '/ubo-sdk'
+sys.path.append(UBO_SDK_PATH)
 
-LOG_CONFIG = SDK_HOME_PATH + "system/log/logging-debug.ini"
+LOG_CONFIG = UBO_SDK_PATH + "system/log/logging-debug.ini"
 logging.config.fileConfig(LOG_CONFIG,
                           disable_existing_loggers=False)
 
@@ -98,7 +101,8 @@ class Device(object):
         # my_env["VSCODE_CLI_USE_FILE_KEYRING"] = "1"
 
         try:
-            command = ["/home/pi/code-insiders", 
+            # TODO: define another path for vscode cli
+            command = [SDK_INSTALL_PATH + "/code-insiders", 
                        "tunnel", 
                        "--accept-server-license-terms", 
                        "--name", hostname]
