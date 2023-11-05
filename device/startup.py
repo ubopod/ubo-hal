@@ -7,8 +7,9 @@ import logging
 import time
 from threading import Thread
 
-SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
-sys.path.append(SDK_HOME_PATH)
+SDK_INSTALL_PATH = os.environ.get('SDK_INSTALL_PATH', '/home/pi/')
+# SDK_HOME_PATH = os.path.dirname(os.path.abspath(__file__)) + '/../'
+sys.path.append(SDK_INSTALL_PATH)
 
 from display.lcd import LCD
 from ubo_keypad.ubo_keypad import Keypad 
@@ -38,7 +39,7 @@ class my_keypad(Keypad):
                 if pressed == "middle-left":
                     lcd.display([(1,"Scan WiFi QRCode",0,"white"), (2, "using the front" ,0,"white"), (3,"camera", 0,"white")], 19)
                     # show led pattern for scanning
-                    path = '/home/pi/ubo-sdk/audio/scan.wav'
+                    path = SDK_INSTALL_PATH + '/audio/scan.wav'
                     x = Thread(target=audio.play, args=(path,))
                     x.start()
                     led_ring.progress_wheel_step(color = (0,0,255))
@@ -64,7 +65,7 @@ class my_keypad(Keypad):
                                         type=security_type)
                         if id:
                             audio.stop()
-                            path = '/home/pi/ubo-sdk/audio/chimes/add.wav'
+                            path = SDK_INSTALL_PATH + '/audio/chimes/add.wav'
                             x = Thread(target=audio.play, args=(path,))
                             x.start()
                             logging.info("wifi added successfully ")
@@ -76,7 +77,7 @@ class my_keypad(Keypad):
                             wifi.logger.info("wifi connected: " + str(R))
                             if R:
                                 audio.stop()
-                                path = '/home/pi/ubo-sdk/audio/chimes/done.wav'
+                                path = SDK_INSTALL_PATH + '/audio/chimes/done.wav'
                                 x = Thread(target=audio.play, args=(path,))
                                 x.start()
                                 led_ring.blink(color = (0,255,0), 
