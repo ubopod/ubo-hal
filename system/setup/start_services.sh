@@ -1,9 +1,7 @@
-UBO_HOME=/home/pi/ubo-sdk
-export PATH=$PATH:/home/pi/.local/bin
-sudo cp $UBO_HOME/rgb_ring/rgb-ring.service /etc/systemd/system/
-sudo cp $UBO_HOME/device/startup-screen.service /etc/systemd/system/
-sudo cp $UBO_HOME/device/safe-reboot-shutdown.service /etc/systemd/system/
-sudo cp $UBO_HOME/device/clear-ui.service /etc/systemd/system/
+envsubst < $UBO_SDK_PATH/rgb_ring/rgb-ring.service | sudo tee /etc/systemd/system/rgb-ring.service
+envsubst < $UBO_SDK_PATH/device/startup-screen.service | sudo tee /etc/systemd/system/startup-screen.service
+envsubst < $UBO_SDK_PATH/device/safe-reboot-shutdown.service | sudo tee /etc/systemd/system/safe-reboot-shutdown.service
+envsubst < $UBO_SDK_PATH/device/clear-ui.service | sudo tee /etc/systemd/system/clear-ui.service
 sudo systemctl daemon-reload
 sudo systemctl enable rgb-ring
 sudo systemctl enable startup-screen
