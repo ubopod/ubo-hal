@@ -3,7 +3,7 @@ Description=Ubo Safe Power off Service
 #Before=hardware-test.service
 
 [Service]
-User=$USER
+User=$UBO_USER
 #Environment=PYTHONPATH=$UBO_VENV_PATH/lib/python3.11/site-packages/
 ExecStart=$UBO_VENV_PATH/bin/python3 $UBO_SDK_PATH/device/safe_reboot_shutdown.py
 KillMode=control-group
