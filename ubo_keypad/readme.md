@@ -1,15 +1,13 @@
-Here is some sample code that lets you interact with the keypad
+If you want to only test the keypad on a fresh Raspberry Pi OS, clone/copy this directory, then run:
 
-There are 3 files.
+`pip install keypad_requirements.txt`
 
-`keypad.py` has a display that triggers all the different buttons
+Make sure you have already installed `gpiozero` by running:
 
-`keypad2.py` has a complex state machine that triggers through a couple of different states
+`sudo apt install python3-gpiozero`
 
-`keypad3.py` has a simple state machine that loops around prompt
+Also make sure yu have I2C and SPI buses enabled in you `/boot/firmware/config.txt`
 
-## How do I run the scripts?
+Finally run the following example:
 
-Step 1: Clone the repo
-
-Step 2: Run `python3 keypad3.py`
+`python3 examples/keypad_example.py`
