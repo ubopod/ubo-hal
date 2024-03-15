@@ -59,7 +59,7 @@ class LCD:
         # self.lcd_present = self.config.getint('hw', 'lcd')            
         self.logger = logging.getLogger("lcd")
         self.button_coordinates = {
-                    "0":(10,45), "1":(10,105), "2":(10,160), 
+                    "top-left":(10,45), "middle-left":(10,105), "bottom-left":(10,160), 
                     "up":(200, 60), "down":(200, 150) , 
                     "back":(50, 200), "home":(160, 200), "mic":(100, 200)
                     }
