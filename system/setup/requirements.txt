@@ -12,7 +12,7 @@ adafruit-circuitpython-rgb-display==3.12.4
 adafruit-circuitpython-typing==1.10.3
 adafruit-circuitpython-veml7700==1.1.19
 Adafruit-GPIO==1.0.3
-Adafruit-PlatformDetect==3.32.0
+Adafruit-PlatformDetect==3.62.0
 Adafruit-PureIO==1.1.11
 Adafruit-SSD1306==1.6.2
 attrs==22.2.0
