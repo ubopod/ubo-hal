@@ -1,9 +1,12 @@
-# Ubo SDK
-This repo includes code for communicating and interfacing with Ubo hardware peripherals
+# Ubo HAL
+
+**OBSOLETE AS OF MAY 2024** Will be updated soon. 
+
+This repo includes code for abstracting Ubo hardware peripheral interfaces. 
 
 There are example code and readme for each peripheral inside each sub-directory.
 
-This SDK has been tested on latest 64-bit Raspberry Pi OS release:
+This repo has been tested on latest 64-bit Raspberry Pi OS release:
 
 > uname -a
 
@@ -22,7 +25,7 @@ cd ~
 git clone https://github.com/ubopod/ubo-sdk.git 
 ```
 
-Currently, we assume that the SDK is cloned in /home/pi/ubo-sdk diretory. We will offer more flexibility for changing installation path in the future.
+Currently, we assume that the repo is cloned in /home/pi/ubo-sdk diretory. We will offer more flexibility for changing installation path in the future.
 
 It is recommended that you do a reboot after the updates are installed before continueing to the next step.
 
